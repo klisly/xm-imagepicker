@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--&lt;!&ndash; POPUP &ndash;&gt;-->
+
+    <!--<style name="PopupAnimation" mce_bogus="1" parent="android:Animation">-->
+    <!--<item name="android:windowEnterAnimation">@anim/popup_in</item>-->
+    <!--<item name="android:windowExitAnimation">@anim/popup_out</item>-->
+    <!--</style>-->
+
+    <!--<style name="Theme.TMessages" parent="@android:style/Theme.Holo.Light">-->
+    <!--<item name="android:windowActionBar">false</item>-->
+    <!--<item name="android:windowNoTitle">true</item>-->
+    <!--<item name="android:windowActionBarOverlay">false</item>-->
+    <!--<item name="android:windowContentOverlay">@null</item>-->
+    <!--<item name="android:colorBackground">@android:color/white</item>-->
+    <!--<item name="android:windowBackground">@android:color/white</item>-->
+    <!--<item name="android:itemTextAppearance">@style/ActionBar.Transparent.TMessages.Item</item>-->
+    <!--<item name="android:listViewStyle">@style/Theme.TMessages.ListView</item>-->
+    <!--<item name="android:listChoiceBackgroundIndicator">@drawable/list_selector</item>-->
+    <!--<item name="android:actionBarItemBackground">@drawable/bar_selector_style</item>-->
+    <!--</style>-->
+
+    <!--&lt;!&ndash;ACTION BAR ITEMS&ndash;&gt;-->
+
+    <!--<style name="ActionBar.Transparent.TMessages.Item" parent="android:TextAppearance.Widget.IconMenu.Item">-->
+    <!--<item name="android:textColor">#000000</item>-->
+    <!--<item name="android:textSize">18sp</item>-->
+    <!--</style>-->
+
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:windowAnimationStyle">@style/AppAnimation</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeBackground">@color/primaryLight</item>
+    </style>
+
+    <style name="AppAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_open_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_open_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_close_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_close_exit</item>
+    </style>
+
+    <style name="ImageTheme" parent="BaseTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
+
+    <style name="ImageTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="ImageTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="ImageTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ImageTheme.TransparentActivity">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="ImageTheme.TransparentActivity.FullScreen">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="SubTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabBackground">@color/accentLight</item>
+        <item name="tabIndicatorColor">#fff5f5f5</item>
+        <item name="tabTextAppearance">@style/TabLayout_TextAppearance_White</item>
+        <item name="tabSelectedTextColor">@android:color/white</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="TabLayout_TextAppearance_White">
+        <item name="android:textColor">#e8e8e8</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="Toolbar_TextAppearance_White">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:ellipsize">middle</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="ImageTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

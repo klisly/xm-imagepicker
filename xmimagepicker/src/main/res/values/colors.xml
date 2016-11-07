@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="divider">#dcdcdc</color>
+    <!-- Main-->
+    <color name="primary">#009688</color>
+    <color name="primaryDark">#00796b</color>
+    <color name="primaryLight">#7DD4B7</color>
+    <color name="accent">#00796b</color>
+    <color name="accentLight">#009688</color>
+    <color name="lighter_gray">#ddd</color>
+
+</resources>

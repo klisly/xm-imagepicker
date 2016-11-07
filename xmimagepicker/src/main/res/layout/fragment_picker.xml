@@ -1,0 +1,17 @@
+<com.zhy.android.percent.support.PercentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/media_margin" />
+
+    <ProgressBar
+        android:id="@+id/loadProgress"
+        android:layout_width="@dimen/tab_height"
+        android:layout_height="@dimen/tab_height"
+        android:layout_gravity="center" />
+</com.zhy.android.percent.support.PercentFrameLayout>
+
