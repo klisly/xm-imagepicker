@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">XmImagePicker</string>
 
     <string name="PickerPhotos">图片</string>
@@ -37,5 +37,10 @@
     <string name="video">视频</string>
 
     <dimen name="tab_height">36dp</dimen>
-
+    <string name="crop__saving">Saving picture…</string>
+    <string name="crop__wait">Please wait…</string>
+    <string name="crop__pick_error">No image sources available</string>
+    <dimen name="crop__bar_height">56dp</dimen>
+    <string name="crop__done">DONE</string>
+    <string name="crop__cancel" tools:ignore="ButtonCase">CANCEL</string>
 </resources>

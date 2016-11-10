@@ -5,7 +5,15 @@ import android.os.Handler;
 
 import com.squareup.picasso.Picasso;
 
+import cn.iterlog.xmimagepicker.Utils.VideoRequestHandler;
+
 public class Gallery {
+    public static int TYPE_MUSIC = 1;
+    public static int TYPE_VIDEO = 2;
+    public static int TYPE_DOC = 3;
+    public static int TYPE_PICTURE = 4;
+
+    public static int THUMB_SIZE = 256;
 
     public volatile static Application applicationContext;
     public volatile static Handler applicationHandler;

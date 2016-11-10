@@ -1,9 +1,13 @@
-package cn.iterlog.xmimagepicker;
+package cn.iterlog.xmimagepicker.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import cn.iterlog.xmimagepicker.Gallery;
+import cn.iterlog.xmimagepicker.MediaFragment;
+import cn.iterlog.xmimagepicker.R;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -21,9 +25,9 @@ public class MediaFagmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         int mediaType = 0;
         if(position == 0){
-            mediaType = Constants.TYPE_PICTURE;
+            mediaType = Gallery.TYPE_PICTURE;
         } else if(position == 1){
-            mediaType = Constants.TYPE_VIDEO;
+            mediaType = Gallery.TYPE_VIDEO;
         }
         return MediaFragment.newInstance(mediaType);
     }

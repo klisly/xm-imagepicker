@@ -25,6 +25,7 @@
             android:layout_gravity="right"
             android:layout_marginRight="16dp"
             android:text="12"
+            android:visibility="gone"
             android:textColor="@android:color/white"
             android:textSize="16dp" />
     </android.support.v7.widget.Toolbar>

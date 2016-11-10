@@ -2,7 +2,9 @@
 <com.zhy.android.percent.support.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    >
 
     <ImageView
         android:id="@+id/iv_portrait"
@@ -10,11 +12,21 @@
         android:layout_height="0dp"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/media_margin"
-        android:scaleType="centerCrop"
         android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         android:src="@drawable/nophotos"
         app:layout_heightPercent="100%w"
         app:layout_widthPercent="100%w" />
+
+
+    <ImageView
+        android:id="@+id/iv_video_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_portrait"
+        android:src="@drawable/ic_camera_white"
+        app:layout_marginBottomPercent="2.5%w"
+        app:layout_marginLeftPercent="6%w" />
 
 </com.zhy.android.percent.support.PercentRelativeLayout>
 

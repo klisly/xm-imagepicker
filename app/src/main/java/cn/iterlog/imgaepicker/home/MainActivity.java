@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import cn.iterlog.imgaepicker.R;
 import cn.iterlog.imgaepicker.util.ActivityUtils;
+import cn.iterlog.xmimagepicker.PickerActivity;
+import cn.iterlog.xmimagepicker.corp.Crop;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,8 +72,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (12 == requestCode && resultCode == Activity.RESULT_OK) {
-//            photos = (List<String>) data.getSerializableExtra(GalleryActivity.PHOTOS);
-//            adapter.notifyDataSetChanged();
+            Log.i(PickerActivity.class.getCanonicalName(), Crop.getOutput(data).toString());
         }
     }
 }

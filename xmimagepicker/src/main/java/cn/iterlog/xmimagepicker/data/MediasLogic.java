@@ -1,18 +1,18 @@
-package cn.iterlog.xmimagepicker;
+package cn.iterlog.xmimagepicker.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.Utils.MediaController;
-
-import static cn.iterlog.xmimagepicker.Constants.TYPE_PICTURE;
 
 /**
  * Created by wizardholy on 2016/11/5.
  */
 public class MediasLogic {
     private static MediasLogic ourInstance = new MediasLogic();
-
+    private int selectAlbum;
+    private int selectMedias;
     private String[] filterMimeTypes = null;
     private ArrayList<MediaController.AlbumEntry> pictureAlbums = new ArrayList<>();
     private ArrayList<MediaController.AlbumEntry> videoAlbums = new ArrayList<>();
@@ -48,7 +48,7 @@ public class MediasLogic {
 
     public void setPictureAlbums(ArrayList<MediaController.AlbumEntry> pictureAlbums) {
         this.pictureAlbums = pictureAlbums;
-        notify(TYPE_PICTURE);
+        notify(Gallery.TYPE_PICTURE);
     }
 
     public ArrayList<MediaController.AlbumEntry> getVideoAlbums() {
@@ -57,7 +57,7 @@ public class MediasLogic {
 
     public void setVideoAlbums(ArrayList<MediaController.AlbumEntry> videoAlbums) {
         this.videoAlbums = videoAlbums;
-        notify(Constants.TYPE_VIDEO);
+        notify(Gallery.TYPE_VIDEO);
     }
 
     public HashMap<Integer, MediaController.PhotoEntry> getSelectedPhotos() {

@@ -1,5 +1,6 @@
 package cn.iterlog.xmimagepicker;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,11 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
 import cn.iterlog.xmimagepicker.Utils.MediaController;
 import cn.iterlog.xmimagepicker.adapter.MediaRecyclerAdapter;
+import cn.iterlog.xmimagepicker.corp.Crop;
+import cn.iterlog.xmimagepicker.data.MediasLogic;
 
 public class MediaFragment extends Fragment implements MediasLogic.MediaListener {
     private static final String ARG_MEDIA_TYPE = "ARG_MEDIA_TYPE";
@@ -57,21 +61,44 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
         }
 
         loadMedias();
-        mAdapter = new MediaRecyclerAdapter(this.getActivity().getApplicationContext(), loadMedias());
+        mAdapter = new MediaRecyclerAdapter(loadMedias());
         mRecy.setAdapter(mAdapter);
         if (MediasLogic.getInstance().isLoading()) {
             mProgressBar.setVisibility(View.GONE);
         } else {
             mProgressBar.setVisibility(View.VISIBLE);
         }
+        mAdapter.setListener(new MediaRecyclerAdapter.OnItemChangeListener() {
+
+            @Override
+            public void onPlay(int position, MediaController.PhotoEntry photoEntry) {
+
+            }
+
+            @Override
+            public void onChoose(int position, MediaController.PhotoEntry photoEntry) {
+
+            }
+
+            @Override
+            public void onMediaView(int position, MediaController.PhotoEntry photoEntry) {
+                try {
+                    Uri destination = Uri.fromFile(new File(getContext().getCacheDir(), "cropped"));
+                    Uri src = Uri.fromFile(new File(photoEntry.path));
+                    Crop.of(src, destination).asSquare().start(getActivity());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         MediasLogic.getInstance().registerListener(this, this);
         return rootView;
     }
 
     private List<MediaController.PhotoEntry> loadMedias() {
-        if (mediaType == Constants.TYPE_PICTURE && MediasLogic.getInstance().getPictureAlbums().size() > 0) {
+        if (mediaType == Gallery.TYPE_PICTURE && MediasLogic.getInstance().getPictureAlbums().size() > 0) {
             return MediasLogic.getInstance().getPictureAlbums().get(0).photos;
-        } else if (mediaType == Constants.TYPE_VIDEO && MediasLogic.getInstance().getVideoAlbums().size() > 0) {
+        } else if (mediaType == Gallery.TYPE_VIDEO && MediasLogic.getInstance().getVideoAlbums().size() > 0) {
             return MediasLogic.getInstance().getVideoAlbums().get(0).photos;
         }
 

@@ -12,11 +12,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import cn.iterlog.xmimagepicker.Utils.MediaController;
 import cn.iterlog.xmimagepicker.Utils.NotificationCenter;
+import cn.iterlog.xmimagepicker.adapter.MediaFagmentAdapter;
+import cn.iterlog.xmimagepicker.corp.Crop;
+import cn.iterlog.xmimagepicker.data.MediasLogic;
 
 public class PickerActivity extends AppCompatActivity implements NotificationCenter.NotificationCenterDelegate {
     private static final String SINGLE_PHOTO = "SINGLE_PHOTO";
@@ -140,6 +144,24 @@ public class PickerActivity extends AppCompatActivity implements NotificationCen
                 MediasLogic.getInstance().setVideoAlbums((ArrayList<MediaController.AlbumEntry>) args[3]);
             }
 
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Crop.REQUEST_CROP) {
+            handleCrop(resultCode, data);
+        }
+    }
+
+    private void handleCrop(int resultCode, Intent result) {
+        if (resultCode == RESULT_OK) {
+            Log.i(PickerActivity.class.getCanonicalName(), Crop.getOutput(result).toString());
+            setResult(RESULT_OK, result);
+            finish();
+        } else if (resultCode == Crop.RESULT_ERROR) {
+            Toast.makeText(this, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 }
