@@ -43,4 +43,7 @@
     <dimen name="crop__bar_height">56dp</dimen>
     <string name="crop__done">DONE</string>
     <string name="crop__cancel" tools:ignore="ButtonCase">CANCEL</string>
+    <string name="choose">选择</string>
+    <string name="no_video">找不到指定的视屏资源</string>
+    <string name="video_preview">预览</string>
 </resources>

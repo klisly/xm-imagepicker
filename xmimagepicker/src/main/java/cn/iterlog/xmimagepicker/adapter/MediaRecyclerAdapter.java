@@ -65,7 +65,7 @@ public class MediaRecyclerAdapter extends RecyclerView.Adapter<MediaRecyclerAdap
                     .into(holder.mPortraitView);
             holder.mVideoTag.setVisibility(View.GONE);
         }
-        if(listener != null){
+        if (listener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -84,10 +84,6 @@ public class MediaRecyclerAdapter extends RecyclerView.Adapter<MediaRecyclerAdap
     }
 
     public interface OnItemChangeListener {
-        void onPlay(int position, MediaController.PhotoEntry photoEntry);
-
-        void onChoose(int position, MediaController.PhotoEntry photoEntry);
-
         void onMediaView(int position, MediaController.PhotoEntry photoEntry);
     }
 

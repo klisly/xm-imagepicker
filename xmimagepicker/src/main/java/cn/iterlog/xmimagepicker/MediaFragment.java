@@ -1,5 +1,6 @@
 package cn.iterlog.xmimagepicker;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import cn.iterlog.xmimagepicker.Utils.MediaController;
 import cn.iterlog.xmimagepicker.adapter.MediaRecyclerAdapter;
 import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
+import cn.iterlog.xmimagepicker.videoplay.VideoActivity;
 
 public class MediaFragment extends Fragment implements MediasLogic.MediaListener {
     private static final String ARG_MEDIA_TYPE = "ARG_MEDIA_TYPE";
@@ -59,7 +61,6 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
             gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
             mRecy.setLayoutManager(gridLayoutManager);
         }
-
         loadMedias();
         mAdapter = new MediaRecyclerAdapter(loadMedias());
         mRecy.setAdapter(mAdapter);
@@ -71,21 +72,18 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
         mAdapter.setListener(new MediaRecyclerAdapter.OnItemChangeListener() {
 
             @Override
-            public void onPlay(int position, MediaController.PhotoEntry photoEntry) {
-
-            }
-
-            @Override
-            public void onChoose(int position, MediaController.PhotoEntry photoEntry) {
-
-            }
-
-            @Override
             public void onMediaView(int position, MediaController.PhotoEntry photoEntry) {
                 try {
-                    Uri destination = Uri.fromFile(new File(getContext().getCacheDir(), "cropped"));
-                    Uri src = Uri.fromFile(new File(photoEntry.path));
-                    Crop.of(src, destination).asSquare().start(getActivity());
+                    if(photoEntry.isVideo){
+                        Uri src = Uri.fromFile(new File(photoEntry.path));
+                        Intent intent = new Intent(getActivity(), VideoActivity.class);
+                        intent.putExtra("src", src);
+                        startActivityForResult(intent, VideoActivity.REQUEST_PICK);
+                    } else {
+                        Uri destination = Uri.fromFile(new File(getContext().getCacheDir(), "cropped"));
+                        Uri src = Uri.fromFile(new File(photoEntry.path));
+                        Crop.of(src, destination).asSquare().start(getActivity());
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
