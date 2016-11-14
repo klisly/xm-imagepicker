@@ -1,8 +1,10 @@
 package cn.iterlog.xmimagepicker.videoplay;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,29 +16,32 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 
+import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.R;
+import cn.iterlog.xmimagepicker.Utils.VideoRequestHandler;
 
 public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Callback, MediaPlayer.OnVideoSizeChangedListener {
-    public static final int REQUEST_PICK = 7098;
-    public Uri src;
+    private static String TAG = VideoActivity.class.getSimpleName();
+    public static final int REQUEST_PICK = 5098;
+    public String src;
     private ImageView playButton;
     private SurfaceView sv;
     private MediaPlayer mediaPlayer;
-    private int status = 0; // unplay 0 playing 1 pause 2
-    private boolean isAuto = true;
     private int svWidth;
     private int svHeight;
     private int vWidht;
     private int vHeight;
     private ImageView preview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
         initToolBar();
-        src = getIntent().getParcelableExtra("src");
+        src = getIntent().getStringExtra("src");
         Log.i(VideoActivity.class.getSimpleName(), "src:" + src);
         if (src == null) {
             Toast.makeText(getApplicationContext(), R.string.no_video, Toast.LENGTH_SHORT).show();
@@ -51,7 +56,7 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
         mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setDataSource(this, src);
+            mediaPlayer.setDataSource(this, Uri.fromFile(new File(src)));
             mediaPlayer.prepare();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
@@ -62,6 +67,7 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
+                    Log.i(TAG, "position:" + mp.getCurrentPosition());
                     onCompletePlay();
                 }
             });
@@ -75,8 +81,7 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
         sv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (status == 1 && mediaPlayer.isPlaying()) {
-                    isAuto = false;
+                if (mediaPlayer.isPlaying()) {
                     onPausePlay();
                 } else {
                     onstartPlay();
@@ -86,6 +91,25 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
 
         mediaPlayer.setOnVideoSizeChangedListener(this);
         initSvSize();
+        loadImagePreview();
+        initChooseListener();
+    }
+
+    private void initChooseListener() {
+        findViewById(R.id.choose)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(src)));
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
+    }
+
+    private void loadImagePreview() {
+        Gallery.picasso.load(VideoRequestHandler.SCHEME_VIDEO + ":" + src).into(preview);
     }
 
     private void initSvSize() {
@@ -94,7 +118,7 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 int tmpWidth = right - left;
                 int tmpHeight = bottom - top;
-                if(tmpHeight != svWidth || tmpHeight != svHeight ){
+                if (tmpHeight != svWidth || tmpHeight != svHeight) {
                     svWidth = tmpWidth;
                     svHeight = tmpHeight;
                     Log.i(VideoActivity.class.getSimpleName(), "sv size changed sw:" + svWidth + "sh:" + svHeight);
@@ -109,43 +133,50 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;
-            playButton.setVisibility(View.VISIBLE);
-            status = 0;
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        onPausePlay();
+        onStopPlay();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (status == 2 && isAuto) {
-            onstartPlay();
-        }
-
         Log.i(VideoActivity.class.getSimpleName(), "svw:" + sv.getLayoutParams().height + "svh:" + sv.getLayoutParams().width);
-
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stop();
+    }
+
+
     private void onCompletePlay() {
+        if (mediaPlayer.getCurrentPosition() == mediaPlayer.getDuration()) {
+            preview.setVisibility(View.VISIBLE);
+        }
         playButton.setVisibility(View.VISIBLE);
+    }
+
+    private void onStopPlay() {
+        playButton.setVisibility(View.VISIBLE);
+        preview.setVisibility(View.VISIBLE);
+        mediaPlayer.pause();
     }
 
     private void onPausePlay() {
         playButton.setVisibility(View.VISIBLE);
-        status = 2;
         mediaPlayer.pause();
     }
 
     private void onstartPlay() {
         mediaPlayer.start();
-        status = 1;
         playButton.setVisibility(View.INVISIBLE);
-        isAuto = true;
+        preview.setVisibility(View.INVISIBLE);
     }
 
     private void initToolBar() {
@@ -178,14 +209,8 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stop();
-    }
-
-    @Override
     public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-        if(vHeight != height || width != vWidht){
+        if (vHeight != height || width != vWidht) {
             vHeight = height;
             vWidht = width;
             Log.i(VideoActivity.class.getSimpleName(), "has changed video size w:" + width + "video size h:" + height);
@@ -200,22 +225,27 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
 
 
     private void refreshSvSize() {
-        if(svWidth == 0 || svHeight == 0 || vWidht == 0 || vHeight == 0){
+        if (svWidth == 0 || svHeight == 0 || vWidht == 0 || vHeight == 0) {
             return;
         }
 
         float rate = vWidht * 1.0f / vHeight;
         Log.i(VideoActivity.class.getSimpleName(), "video w/h rate:" + rate);
-        if(svHeight * rate > svWidth){
+        if (svHeight * rate > svWidth) {
             svHeight = (int) (svWidth / rate);
         } else {
-            svWidth =(int) (svHeight * rate);
+            svWidth = (int) (svHeight * rate);
         }
         ViewGroup.LayoutParams params = sv.getLayoutParams();
         params.width = svWidth;
         params.height = svHeight;
         sv.setLayoutParams(params);
+        params = preview.getLayoutParams();
+        params.width = svWidth;
+        params.height = svHeight;
+        preview.setLayoutParams(params);
 
     }
+
 }
 

@@ -75,10 +75,9 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
             public void onMediaView(int position, MediaController.PhotoEntry photoEntry) {
                 try {
                     if(photoEntry.isVideo){
-                        Uri src = Uri.fromFile(new File(photoEntry.path));
                         Intent intent = new Intent(getActivity(), VideoActivity.class);
-                        intent.putExtra("src", src);
-                        startActivityForResult(intent, VideoActivity.REQUEST_PICK);
+                        intent.putExtra("src", photoEntry.path);
+                        getActivity().startActivityForResult(intent, VideoActivity.REQUEST_PICK);
                     } else {
                         Uri destination = Uri.fromFile(new File(getContext().getCacheDir(), "cropped"));
                         Uri src = Uri.fromFile(new File(photoEntry.path));

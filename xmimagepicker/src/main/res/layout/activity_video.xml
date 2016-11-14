@@ -20,7 +20,9 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:visibility="invisible" />
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:visibility="visible" />
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -31,11 +33,13 @@
         app:titleTextAppearance="@style/Toolbar_TextAppearance_White">
 
         <TextView
+            android:id="@+id/choose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:padding="12dp"
             android:text="@string/choose"
+            android:clickable="true"
             android:textColor="@android:color/white"
             android:textSize="14dp"
             android:visibility="visible" />

@@ -21,17 +21,10 @@ import cn.iterlog.xmimagepicker.Utils.NotificationCenter;
 import cn.iterlog.xmimagepicker.adapter.MediaFagmentAdapter;
 import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
+import cn.iterlog.xmimagepicker.videoplay.VideoActivity;
 
 public class PickerActivity extends AppCompatActivity implements NotificationCenter.NotificationCenterDelegate {
-    private static final String SINGLE_PHOTO = "SINGLE_PHOTO";
-    private static final String LIMIT_PICK_PHOTO = "LIMIT_PICK_PHOTO";
-    private static final String HAS_CAMERA = "HAS_CAMERA";
-    private static final String FILTER_MIME_TYPES = "FILTER_MIME_TYPES";
-    private static final String MEDIA_TYPE = "MEDIA_TYPE";
-    private static final int MEDIA_PICTURE = 1;
-    private static final int MEDIA_MOVIE = 2;
-    private static final int MEDIA_DOCUMENT = 4;
-    private static final int MEDIA_MUSIC = 8;
+
     protected int classGuid = 0;
     TabLayout mTabLayout;
     long time = 0;
@@ -55,11 +48,11 @@ public class PickerActivity extends AppCompatActivity implements NotificationCen
             int requestCode) {
         limitPickPhoto = singlePhoto ? 1 : limitPickPhoto > 0 ? limitPickPhoto : 1;
         Intent intent = new Intent(activity, PickerActivity.class);
-        intent.putExtra(SINGLE_PHOTO, singlePhoto);
-        intent.putExtra(LIMIT_PICK_PHOTO, limitPickPhoto);
-        intent.putExtra(FILTER_MIME_TYPES, filterMimeTypes);
-        intent.putExtra(HAS_CAMERA, /* hasCamera */false);
-        intent.putExtra(MEDIA_TYPE, /* hasCamera */MEDIA_TYPE);
+        intent.putExtra(Constants.SINGLE_PHOTO, singlePhoto);
+        intent.putExtra(Constants.LIMIT_PICK_PHOTO, limitPickPhoto);
+        intent.putExtra(Constants.FILTER_MIME_TYPES, filterMimeTypes);
+        intent.putExtra(Constants.HAS_CAMERA, false);
+        intent.putExtra(Constants.MEDIA_TYPE, Constants.MEDIA_TYPE);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -135,7 +128,6 @@ public class PickerActivity extends AppCompatActivity implements NotificationCen
 
     @Override
     public void didReceivedNotification(int id, Object... args) {
-        Log.i(PickerActivity.class.getCanonicalName(), "need time:" + (System.currentTimeMillis() - time));
         if (id == NotificationCenter.albumsDidLoaded) {
             int guid = (Integer) args[0];
             if (classGuid == guid) {
@@ -151,7 +143,12 @@ public class PickerActivity extends AppCompatActivity implements NotificationCen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Crop.REQUEST_CROP) {
+            data.putExtra("type",Constants.TYPE_IMAGE);
             handleCrop(resultCode, data);
+        } else if(requestCode == VideoActivity.REQUEST_PICK){
+            data.putExtra("type",Constants.TYPE_VIDEO);
+            setResult(RESULT_OK, data);
+            finish();
         }
     }
 
