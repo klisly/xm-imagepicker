@@ -1,12 +1,12 @@
 package cn.iterlog.xmimagepicker.videoplay;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -19,11 +19,12 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
+import cn.iterlog.xmimagepicker.BaseActivity;
 import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.R;
 import cn.iterlog.xmimagepicker.Utils.VideoRequestHandler;
 
-public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Callback, MediaPlayer.OnVideoSizeChangedListener {
+public class VideoActivity extends BaseActivity implements SurfaceHolder.Callback, MediaPlayer.OnVideoSizeChangedListener {
     private static String TAG = VideoActivity.class.getSimpleName();
     public static final int REQUEST_PICK = 5098;
     public String src;
@@ -35,6 +36,19 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
     private int vWidht;
     private int vHeight;
     private ImageView preview;
+
+    private void initToolBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.video_preview);
+        toolbar.setNavigationIcon(R.drawable.ic_back_white);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,43 +67,17 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
         preview = (ImageView) findViewById(R.id.preview);
         sv = (SurfaceView) findViewById(R.id.sv);
         sv.getHolder().addCallback(this);
-        mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setDataSource(this, Uri.fromFile(new File(src)));
-            mediaPlayer.prepare();
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    playButton.setVisibility(View.VISIBLE);
-                }
-            });
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    Log.i(TAG, "position:" + mp.getCurrentPosition());
-                    onCompletePlay();
-                }
-            });
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            finish();
-            return;
-        }
-
-        sv.setOnClickListener(new View.OnClickListener() {
+        sv.setBackgroundDrawable(getResources().getDrawable(R.drawable.video_texture));
+        findViewById(R.id.activity_video).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mediaPlayer.isPlaying()) {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                     onPausePlay();
                 } else {
                     onstartPlay();
                 }
             }
         });
-
-        mediaPlayer.setOnVideoSizeChangedListener(this);
         initSvSize();
         loadImagePreview();
         initChooseListener();
@@ -128,14 +116,6 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
         });
     }
 
-    protected void stop() {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -143,29 +123,24 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         Log.i(VideoActivity.class.getSimpleName(), "svw:" + sv.getLayoutParams().height + "svh:" + sv.getLayoutParams().width);
+        findViewById(R.id.activity_video).setBackgroundColor(getResources().getColor(R.color.black_p50));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stop();
     }
 
 
     private void onCompletePlay() {
-        if (mediaPlayer.getCurrentPosition() == mediaPlayer.getDuration()) {
+        if (mediaPlayer != null && mediaPlayer.getCurrentPosition() == mediaPlayer.getDuration()) {
             preview.setVisibility(View.VISIBLE);
+            onStopPlay();
         }
         playButton.setVisibility(View.VISIBLE);
-    }
-
-    private void onStopPlay() {
-        playButton.setVisibility(View.VISIBLE);
-        preview.setVisibility(View.VISIBLE);
-        mediaPlayer.pause();
     }
 
     private void onPausePlay() {
@@ -174,28 +149,95 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
     }
 
     private void onstartPlay() {
-        mediaPlayer.start();
-        playButton.setVisibility(View.INVISIBLE);
-        preview.setVisibility(View.INVISIBLE);
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+            playButton.setVisibility(View.INVISIBLE);
+            return;
+        }
+        try {
+
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setDataSource(this, Uri.fromFile(new File(src)));
+            mediaPlayer.prepareAsync();
+            mediaPlayer.setDisplay(sv.getHolder());
+            mediaPlayer.setOnVideoSizeChangedListener(this);
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+                    playButton.setVisibility(View.INVISIBLE);
+                    preview.animate()
+                            .alpha(0.8f)
+                            .setDuration(400)
+                            .setListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    sv.setBackgroundDrawable(null);
+                                    preview.setVisibility(View.INVISIBLE);
+                                    preview.setAlpha(1.0f);
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {
+
+                                }
+                            });
+
+//                    }, 200);
+                    mediaPlayer.start();
+
+                }
+            });
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    Log.i(TAG, "position:" + mp.getCurrentPosition());
+                    onCompletePlay();
+                }
+            });
+
+        } catch (
+                IOException e
+                )
+
+        {
+            e.printStackTrace();
+            finish();
+            return;
+        }
+
     }
 
-    private void initToolBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.video_preview);
-        toolbar.setNavigationIcon(R.drawable.ic_back_white);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
+    protected void onStopPlay() {
+        playButton.setVisibility(View.VISIBLE);
+        preview.setVisibility(View.VISIBLE);
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
             }
-        });
+            mediaPlayer = null;
+        }
     }
-
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        mediaPlayer.setDisplay(holder);
     }
 
     @Override
@@ -205,7 +247,7 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        onStopPlay();
     }
 
     @Override
@@ -246,6 +288,5 @@ public class VideoActivity extends AppCompatActivity implements SurfaceHolder.Ca
         preview.setLayoutParams(params);
 
     }
-
 }
 

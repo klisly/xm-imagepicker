@@ -56,8 +56,8 @@ public class CropImageActivity extends MonitoredActivity {
 
     @Override
     public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
         setupWindowFlags();
+        super.onCreate(icicle);
         setupViews();
 
         loadInput();

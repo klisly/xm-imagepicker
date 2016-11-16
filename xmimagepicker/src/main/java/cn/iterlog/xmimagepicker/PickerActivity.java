@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +22,7 @@ import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
 import cn.iterlog.xmimagepicker.videoplay.VideoActivity;
 
-public class PickerActivity extends AppCompatActivity implements NotificationCenter.NotificationCenterDelegate {
+public class PickerActivity extends BaseActivity implements NotificationCenter.NotificationCenterDelegate {
 
     protected int classGuid = 0;
     TabLayout mTabLayout;
@@ -142,13 +141,15 @@ public class PickerActivity extends AppCompatActivity implements NotificationCen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Crop.REQUEST_CROP) {
-            data.putExtra("type",Constants.TYPE_IMAGE);
-            handleCrop(resultCode, data);
-        } else if(requestCode == VideoActivity.REQUEST_PICK){
-            data.putExtra("type",Constants.TYPE_VIDEO);
-            setResult(RESULT_OK, data);
-            finish();
+        if(resultCode == RESULT_OK) {
+            if (requestCode == Crop.REQUEST_CROP) {
+                data.putExtra("type", Constants.TYPE_IMAGE);
+                handleCrop(resultCode, data);
+            } else if (requestCode == VideoActivity.REQUEST_PICK) {
+                data.putExtra("type", Constants.TYPE_VIDEO);
+                setResult(RESULT_OK, data);
+                finish();
+            }
         }
     }
 

@@ -3,15 +3,16 @@ package cn.iterlog.imgaepicker.home;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import cn.iterlog.xmimagepicker.BaseActivity;
 
 import cn.iterlog.imgaepicker.R;
 import cn.iterlog.imgaepicker.util.ActivityUtils;
 import cn.iterlog.xmimagepicker.PickerActivity;
 import cn.iterlog.xmimagepicker.corp.Crop;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
 //    private List<String> photos;
 //    private BaseAdapter adapter;
