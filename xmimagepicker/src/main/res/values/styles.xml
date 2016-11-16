@@ -24,11 +24,6 @@
     <style name="ImageTheme.NoBack" parent="BaseTheme">
         <item name="android:windowIsTranslucent">false</item>
     </style>
-    <style name="ImageTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="ImageTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="ImageTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="ImageTheme.TransparentActivity">
         <item name="android:windowBackground">@android:color/transparent</item>

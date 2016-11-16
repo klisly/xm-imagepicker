@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.view.View;
 import android.widget.Toast;
 
 import cn.iterlog.xmimagepicker.R;
@@ -91,7 +94,7 @@ public class Crop {
         return this;
     }
 
-    /**
+       /**
      * Send the crop Intent from an Activity
      *
      * @param activity Activity to receive result
@@ -99,6 +102,28 @@ public class Crop {
     public void start(Activity activity) {
         start(activity, REQUEST_CROP);
     }
+
+    /**
+     * Send the crop Intent from an Activity
+     *
+     * @param activity Activity to receive result
+     */
+    public void startWithTrans(Activity activity, View view, String tansName) {
+        startWithTrans(activity, REQUEST_CROP, view, tansName);
+    }
+
+    /**
+     * Send the crop Intent from an Activity with a custom request code
+     *
+     * @param activity    Activity to receive result
+     * @param requestCode requestCode for result
+     */
+    public void startWithTrans(Activity activity, int requestCode, View view, String transName) {
+        ActivityOptionsCompat compat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                view, transName);
+        ActivityCompat.startActivityForResult(activity,getIntent(activity), requestCode, compat.toBundle());
+    }
+
 
     /**
      * Send the crop Intent from an Activity with a custom request code

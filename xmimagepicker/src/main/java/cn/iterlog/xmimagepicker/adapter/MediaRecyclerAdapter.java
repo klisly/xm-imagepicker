@@ -45,7 +45,7 @@ public class MediaRecyclerAdapter extends RecyclerView.Adapter<MediaRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(MediaHolder holder, final int position) {
+    public void onBindViewHolder(final MediaHolder holder, final int position) {
         MediaController.PhotoEntry photoEntry = mMedias.get(position);
         if (photoEntry.isVideo) {
             Gallery.picasso.load(VideoRequestHandler.SCHEME_VIDEO + ":" + photoEntry.path)
@@ -69,7 +69,7 @@ public class MediaRecyclerAdapter extends RecyclerView.Adapter<MediaRecyclerAdap
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onMediaView(position, mMedias.get(position));
+                    listener.onMediaView(holder, position, mMedias.get(position));
                 }
             });
         }
@@ -84,10 +84,10 @@ public class MediaRecyclerAdapter extends RecyclerView.Adapter<MediaRecyclerAdap
     }
 
     public interface OnItemChangeListener {
-        void onMediaView(int position, MediaController.PhotoEntry photoEntry);
+        void onMediaView(MediaHolder view, int position, MediaController.PhotoEntry photoEntry);
     }
 
-    class MediaHolder extends RecyclerView.ViewHolder {
+    public class MediaHolder extends RecyclerView.ViewHolder {
 
         ImageView mPortraitView;
         ImageView mVideoTag;

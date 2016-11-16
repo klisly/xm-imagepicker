@@ -72,8 +72,9 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
         mAdapter.setListener(new MediaRecyclerAdapter.OnItemChangeListener() {
 
             @Override
-            public void onMediaView(int position, MediaController.PhotoEntry photoEntry) {
+            public void onMediaView(MediaRecyclerAdapter.MediaHolder view, int position, MediaController.PhotoEntry photoEntry) {
                 try {
+
                     if(photoEntry.isVideo){
                         Intent intent = new Intent(getActivity(), VideoActivity.class);
                         intent.putExtra("src", photoEntry.path);

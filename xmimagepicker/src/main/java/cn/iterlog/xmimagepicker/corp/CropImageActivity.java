@@ -408,6 +408,11 @@ public class CropImageActivity extends MonitoredActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onSearchRequested() {
         return false;
     }

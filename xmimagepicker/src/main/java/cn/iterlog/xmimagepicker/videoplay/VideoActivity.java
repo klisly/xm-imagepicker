@@ -134,6 +134,10 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     private void onCompletePlay() {
         if (mediaPlayer != null && mediaPlayer.getCurrentPosition() == mediaPlayer.getDuration()) {
