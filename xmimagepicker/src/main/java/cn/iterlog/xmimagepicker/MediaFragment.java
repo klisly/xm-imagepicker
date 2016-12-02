@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import cn.iterlog.xmimagepicker.Utils.MediaController;
-import cn.iterlog.xmimagepicker.adapter.MediaRecyclerAdapter;
+import cn.iterlog.xmimagepicker.adapter.MediaAdapter;
 import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
 import cn.iterlog.xmimagepicker.videoplay.VideoActivity;
@@ -26,7 +26,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
     private static final String ARG_MEDIA_TYPE = "ARG_MEDIA_TYPE";
     private int mediaType = -1;
     private RecyclerView mRecy;
-    private MediaRecyclerAdapter mAdapter;
+    private MediaAdapter mAdapter;
     private ProgressBar mProgressBar;
 
     public MediaFragment() {
@@ -62,17 +62,17 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
             mRecy.setLayoutManager(gridLayoutManager);
         }
         loadMedias();
-        mAdapter = new MediaRecyclerAdapter(loadMedias());
+        mAdapter = new MediaAdapter(loadMedias());
         mRecy.setAdapter(mAdapter);
         if (MediasLogic.getInstance().isLoading()) {
             mProgressBar.setVisibility(View.GONE);
         } else {
             mProgressBar.setVisibility(View.VISIBLE);
         }
-        mAdapter.setListener(new MediaRecyclerAdapter.OnItemChangeListener() {
+        mAdapter.setListener(new MediaAdapter.OnItemChangeListener() {
 
             @Override
-            public void onMediaView(MediaRecyclerAdapter.MediaHolder view, int position, MediaController.PhotoEntry photoEntry) {
+            public void onMediaView(MediaAdapter.MediaHolder view, int position, MediaController.PhotoEntry photoEntry) {
                 try {
 
                     if(photoEntry.isVideo){

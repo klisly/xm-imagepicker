@@ -1,13 +1,18 @@
 package cn.iterlog.xmimagepicker;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +22,6 @@ import java.util.ArrayList;
 
 import cn.iterlog.xmimagepicker.Utils.MediaController;
 import cn.iterlog.xmimagepicker.Utils.NotificationCenter;
-import cn.iterlog.xmimagepicker.adapter.MediaFagmentAdapter;
 import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
 import cn.iterlog.xmimagepicker.videoplay.VideoActivity;
@@ -29,6 +33,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
     long time = 0;
     private MediaFagmentAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private RecyclerView dirRecy;
 
     /**
      * 打开相册
@@ -64,6 +69,8 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         openActivity(activity, null, singlePhoto, 1, requestCode);
     }
 
+    int defaultChoose = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +82,25 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         mSectionsPagerAdapter = new MediaFagmentAdapter(getSupportFragmentManager(), this);
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                defaultChoose = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mTabLayout.setupWithViewPager(mViewPager);
+        dirRecy = (RecyclerView) findViewById(R.id.directory);
+
         MediasLogic.getInstance().setLoading(true);
         String READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE";
         String WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE";
@@ -161,6 +186,43 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             finish();
         } else if (resultCode == Crop.RESULT_ERROR) {
             Toast.makeText(this, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    class MediaFagmentAdapter extends FragmentPagerAdapter {
+        private Context mContext;
+
+        public MediaFagmentAdapter(FragmentManager fm, Context context) {
+            super(fm);
+            mContext = context;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            int mediaType = 0;
+            if(position == 0){
+                mediaType = Gallery.TYPE_PICTURE;
+            } else if(position == 1){
+                mediaType = Gallery.TYPE_VIDEO;
+            }
+            return MediaFragment.newInstance(mediaType);
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return mContext.getString(R.string.picture);
+                case 1:
+                    return mContext.getString(R.string.video);
+            }
+            return null;
         }
     }
 }

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/black_p50">
+    android:background="#ddd">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
+        android:layout_alignParentTop="true"
         app:layout_scrollFlags="scroll|enterAlways"
         app:titleTextAppearance="@style/Toolbar_TextAppearance_White">
 
@@ -29,17 +29,42 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         style="@style/SubTabLayout"
+        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_height"
         android:background="@color/accentLight"
         app:tabGravity="fill"
         app:tabMode="fixed" />
-
+    <View
+        android:id="@+id/view_dir"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        android:layout_height="48dp">
+    </View>
+    <TextView
+        android:id="@+id/tv_dir"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="相册"
+        android:textSize="14sp"
+        android:background="@drawable/btn"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/accentLight"
+        />
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
+        android:layout_below="@id/tab_layout"
+        android:layout_above="@id/view_dir"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/directory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-
-</LinearLayout>
+</RelativeLayout>

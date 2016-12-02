@@ -87,6 +87,10 @@ public class MediasLogic {
         void onMediaLoaded(int type);
     }
 
+    public interface DirectoryListener {
+        void onDirectoryChange(int type);
+    }
+
     private void notify(int type){
         for(MediaListener listener:listeners.values()){
            listener.onMediaLoaded(type);

@@ -44,7 +44,7 @@
 
     <style name="TabLayout_TextAppearance_White">
         <item name="android:textColor">#e8e8e8</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:ellipsize">middle</item>
         <item name="android:lines">1</item>
     </style>

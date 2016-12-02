@@ -15,12 +15,12 @@ import cn.iterlog.xmimagepicker.R;
 import cn.iterlog.xmimagepicker.Utils.MediaController;
 import cn.iterlog.xmimagepicker.Utils.VideoRequestHandler;
 
-public class MediaRecyclerAdapter extends RecyclerView.Adapter<MediaRecyclerAdapter.MediaHolder> {
+public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder> {
 
     private List<MediaController.PhotoEntry> mMedias;
     private OnItemChangeListener listener;
 
-    public MediaRecyclerAdapter(List<MediaController.PhotoEntry> medias) {
+    public MediaAdapter(List<MediaController.PhotoEntry> medias) {
         this.mMedias = medias;
     }
 
