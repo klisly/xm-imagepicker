@@ -16,6 +16,8 @@
 
 package cn.iterlog.imgaepicker.home;
 
+import android.net.Uri;
+
 import cn.iterlog.imgaepicker.BasePresenter;
 import cn.iterlog.imgaepicker.BaseView;
 
@@ -28,6 +30,8 @@ public interface MainContract {
         void showSingleChoose();
 
         void showMultiChoose();
+
+        void showChooseImage(boolean isVideo, Uri uri);
     }
 
     interface Presenter extends BasePresenter {
@@ -35,5 +39,7 @@ public interface MainContract {
         void showSingleChoose();
 
         void showMultiChoose();
+
+        void setImage(boolean isVideo, Uri uri);
     }
 }

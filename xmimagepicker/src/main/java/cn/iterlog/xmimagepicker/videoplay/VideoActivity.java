@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 import cn.iterlog.xmimagepicker.BaseActivity;
+import cn.iterlog.xmimagepicker.Constants;
 import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.R;
 import cn.iterlog.xmimagepicker.Utils.VideoRequestHandler;
@@ -89,6 +90,7 @@ public class VideoActivity extends BaseActivity implements SurfaceHolder.Callbac
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent();
+                        intent.putExtra(Constants.MEDIA_TYPE, Constants.MEDIA_MOVIE);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(src)));
                         setResult(RESULT_OK, intent);
                         finish();

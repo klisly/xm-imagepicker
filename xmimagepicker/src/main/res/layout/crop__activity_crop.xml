@@ -1,21 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <include
-        android:id="@+id/done_cancel_bar"
-        layout="@layout/crop__layout_done_cancel" />
-
     <cn.iterlog.xmimagepicker.corp.CropImageView
         android:id="@+id/crop_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/crop__texture"
-        android:layout_below="@id/done_cancel_bar"
-
+        android:background="#222222"
         />
-
+    <ImageView
+        android:id="@+id/btn_cancel"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="12dp"
+        android:src="@drawable/cancle"
+        android:scaleType="centerInside"
+        android:adjustViewBounds="true"
+        />
+    <ImageView
+        android:id="@+id/btn_done"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:padding="6dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="12dp"
+        android:src="@drawable/confirm"
+        android:scaleType="centerInside"
+        android:adjustViewBounds="true"
+        />
 </RelativeLayout>

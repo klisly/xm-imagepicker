@@ -37,11 +37,11 @@
     <string name="video">视频</string>
 
     <dimen name="tab_height">36dp</dimen>
-    <string name="crop__saving">Saving picture…</string>
-    <string name="crop__wait">Please wait…</string>
-    <string name="crop__pick_error">No image sources available</string>
+    <string name="crop__saving">正在保存图片</string>
+    <string name="crop__wait">请稍等</string>
+    <string name="crop__pick_error">图片不存在</string>
     <dimen name="crop__bar_height">56dp</dimen>
-    <string name="crop__done">DONE</string>
+    <string name="crop__done">完成</string>
     <string name="crop__cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="choose">选择</string>
     <string name="no_video">找不到指定的视屏资源</string>

@@ -16,7 +16,11 @@
 
 package cn.iterlog.imgaepicker.home;
 
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import cn.iterlog.imgaepicker.R;
 import cn.iterlog.xmimagepicker.PickerActivity;
@@ -38,8 +43,7 @@ public class MainFragment extends Fragment implements MainContract.View {
     private MainContract.Presenter mPresenter;
 
     private Button button1;
-
-    private Button button2;
+    private ImageView chooseIv;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -71,24 +75,17 @@ public class MainFragment extends Fragment implements MainContract.View {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.frag_main, container, false);
         button1 = (Button) root.findViewById(R.id.btn);
-        button2 = (Button) root.findViewById(R.id.btn2);
+        chooseIv = (ImageView) root.findViewById(R.id.iv);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPresenter.showMultiChoose();
             }
         });
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.showSingleChoose();
-            }
-        });
         setHasOptionsMenu(false);
         setRetainInstance(true);
         return root;
     }
-
 
 
     @Override
@@ -99,5 +96,15 @@ public class MainFragment extends Fragment implements MainContract.View {
     @Override
     public void showMultiChoose() {
         PickerActivity.openActivity(getActivity(), true, 9, 12);
+    }
+
+    @Override
+    public void showChooseImage(boolean isVideo, Uri uri) {
+        if (!isVideo) {
+            chooseIv.setImageURI(uri);
+        } else {
+            Bitmap bm = ThumbnailUtils.createVideoThumbnail(uri.getPath(), MediaStore.Images.Thumbnails.MINI_KIND);
+            chooseIv.setImageBitmap(bm);
+        }
     }
 }

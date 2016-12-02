@@ -78,8 +78,10 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         mTabLayout.setupWithViewPager(mViewPager);
         MediasLogic.getInstance().setLoading(true);
         String READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE";
+        String WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE";
         if (checkCallingOrSelfPermission(
-                READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && checkCallingOrSelfPermission(
+                WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= 23) {
                 requestPermissions(new String[]{
                         READ_EXTERNAL_STORAGE
@@ -134,7 +136,6 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
                 MediasLogic.getInstance().setPictureAlbums((ArrayList<MediaController.AlbumEntry>) args[1]);
                 MediasLogic.getInstance().setVideoAlbums((ArrayList<MediaController.AlbumEntry>) args[3]);
             }
-
         }
     }
 

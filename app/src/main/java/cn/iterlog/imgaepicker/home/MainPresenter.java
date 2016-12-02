@@ -16,6 +16,7 @@
 
 package cn.iterlog.imgaepicker.home;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -46,5 +47,10 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void showMultiChoose() {
         mView.showMultiChoose();
+    }
+
+    @Override
+    public void setImage(boolean isVideo, Uri uri) {
+        mView.showChooseImage(isVideo, uri);
     }
 }

@@ -1,5 +1,7 @@
 package cn.iterlog.xmimagepicker.corp;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,12 +19,14 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnticipateOvershootInterpolator;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
 
+import cn.iterlog.xmimagepicker.Constants;
 import cn.iterlog.xmimagepicker.R;
 
 /*
@@ -101,6 +105,34 @@ public class CropImageActivity extends MonitoredActivity {
                 onSaveClicked();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        View v1 = findViewById(R.id.btn_cancel);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(v1, "scaleX", 0F, 1F);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(v1, "scaleY", 0F, 1F);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(v1, "alpha", 0F, 1F);
+        ObjectAnimator rotate = ObjectAnimator.ofFloat(v1, "rotation", 0f, 720);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(scaleX, scaleY, alpha, rotate);
+        animatorSet.setDuration(1000);
+        animatorSet.setInterpolator(new AnticipateOvershootInterpolator());
+        animatorSet.start();
+
+        View v2 = findViewById(R.id.btn_done);
+        scaleX = ObjectAnimator.ofFloat(v2, "scaleX", 0F, 1F);
+        scaleY = ObjectAnimator.ofFloat(v2, "scaleY", 0F, 1F);
+        alpha = ObjectAnimator.ofFloat(v2, "alpha", 0F, 1F);
+        rotate = ObjectAnimator.ofFloat(v2, "rotation", 0f, 720);
+
+        AnimatorSet animatorSet2 = new AnimatorSet();
+        animatorSet2.playTogether(scaleX, scaleY, alpha, rotate);
+        animatorSet2.setDuration(1000);
+        animatorSet2.setInterpolator(new AnticipateOvershootInterpolator());
+        animatorSet2.start();
     }
 
     private void loadInput() {
@@ -198,7 +230,7 @@ public class CropImageActivity extends MonitoredActivity {
                         }
                         new Cropper().crop();
                     }
-                }, handler
+                }, handler, false
         );
     }
 
@@ -287,6 +319,7 @@ public class CropImageActivity extends MonitoredActivity {
             imageView.center();
             imageView.highlightViews.clear();
         }
+
         saveImage(croppedImage);
     }
 
@@ -296,10 +329,14 @@ public class CropImageActivity extends MonitoredActivity {
             CropUtil.startBackgroundJob(this, null, getResources().getString(R.string.crop__saving),
                     new Runnable() {
                         public void run() {
-                            saveOutput(b);
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    saveOutput(b);
+                                }
+                            }, 800);
                         }
-                    }, handler
-            );
+                    }, handler, false );
         } else {
             finish();
         }
@@ -422,7 +459,10 @@ public class CropImageActivity extends MonitoredActivity {
     }
 
     private void setResultUri(Uri uri) {
-        setResult(RESULT_OK, new Intent().putExtra(MediaStore.EXTRA_OUTPUT, uri));
+        Intent intent = new Intent();
+        intent.putExtra(Constants.MEDIA_TYPE, Constants.MEDIA_PICTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        setResult(RESULT_OK, intent);
     }
 
     private void setResultException(Throwable throwable) {
