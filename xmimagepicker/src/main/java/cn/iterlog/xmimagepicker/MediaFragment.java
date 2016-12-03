@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.List;
 
 import cn.iterlog.xmimagepicker.Utils.MediaController;
 import cn.iterlog.xmimagepicker.adapter.MediaAdapter;
@@ -61,8 +59,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
             gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
             mRecy.setLayoutManager(gridLayoutManager);
         }
-        loadMedias();
-        mAdapter = new MediaAdapter(loadMedias());
+        mAdapter = new MediaAdapter(MediasLogic.getInstance().loadMedias(mediaType));
         mRecy.setAdapter(mAdapter);
         if (MediasLogic.getInstance().isLoading()) {
             mProgressBar.setVisibility(View.GONE);
@@ -93,16 +90,6 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
         return rootView;
     }
 
-    private List<MediaController.PhotoEntry> loadMedias() {
-        if (mediaType == Gallery.TYPE_PICTURE && MediasLogic.getInstance().getPictureAlbums().size() > 0) {
-            return MediasLogic.getInstance().getPictureAlbums().get(0).photos;
-        } else if (mediaType == Gallery.TYPE_VIDEO && MediasLogic.getInstance().getVideoAlbums().size() > 0) {
-            return MediasLogic.getInstance().getVideoAlbums().get(0).photos;
-        }
-
-        return Collections.EMPTY_LIST;
-    }
-
     @Override
     public void onDestroyView() {
         MediasLogic.getInstance().unRegisterListener(this);
@@ -111,8 +98,8 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
 
     @Override
     public void onMediaLoaded(int type) {
-        if (type == mediaType) {
-            mAdapter.setmMedias(loadMedias());
+        if (type ==  mediaType) {
+            mAdapter.setmMedias(MediasLogic.getInstance().loadMedias(mediaType));
             mAdapter.notifyDataSetChanged();
         }
     }

@@ -335,7 +335,7 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
                                 albums.put(bucketId, albumEntry);
                                 if (cameraAlbumVideoId == null && cameraFolder != null
                                         && path != null && path.startsWith(cameraFolder)) {
-                                    videoAlbumsSorted.add(0, albumEntry);
+                                    videoAlbumsSorted.add(1, albumEntry);
                                     cameraAlbumVideoId = bucketId;
                                 } else {
                                     videoAlbumsSorted.add(albumEntry);
