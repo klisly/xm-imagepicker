@@ -138,12 +138,22 @@ public class MediasLogic {
             pictueAlbumIndex = position;
             notify(Constants.MEDIA_PICTURE);
         }
+        notify(Constants.NOTIFY_TYPE_DIRECTORY);
     }
 
     public void clearData() {
         mediaType = Constants.MEDIA_PICTURE;
         pictueAlbumIndex = 0;
         videoAlbumIndex = 0;
+    }
+
+    public int getChoosePosition() {
+        if(mediaType == Constants.MEDIA_PICTURE){
+            return pictueAlbumIndex;
+        } else if(mediaType == Constants.MEDIA_MOVIE){
+            return videoAlbumIndex;
+        }
+        return 0;
     }
 
     public interface MediaListener {

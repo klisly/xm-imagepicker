@@ -201,6 +201,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         size = dirRecy.getBottom() - mViewPager.getTop();
         dirRecy.setVisibility(View.VISIBLE);
         dirRecy.setAlpha(0.01f);
+        dirRecy.smoothScrollToPosition(MediasLogic.getInstance().getChoosePosition());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
