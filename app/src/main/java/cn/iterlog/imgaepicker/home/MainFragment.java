@@ -90,12 +90,12 @@ public class MainFragment extends Fragment implements MainContract.View {
 
     @Override
     public void showSingleChoose() {
-        PickerActivity.openActivity(getActivity(), false, 9, 12);
+        PickerActivity.openActivity(getActivity(), 12);
     }
 
     @Override
     public void showMultiChoose() {
-        PickerActivity.openActivity(getActivity(), true, 9, 12);
+        PickerActivity.openActivity(getActivity(), 12);
     }
 
     @Override
