@@ -10,7 +10,7 @@ import android.util.Log;
 import cn.iterlog.imgaepicker.R;
 import cn.iterlog.imgaepicker.util.ActivityUtils;
 import cn.iterlog.xmimagepicker.BaseActivity;
-import cn.iterlog.xmimagepicker.Constants;
+import cn.iterlog.xmimagepicker.Configs;
 
 public class MainActivity extends BaseActivity {
     private MainPresenter mainPresenter;
@@ -37,12 +37,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (12 == requestCode && resultCode == Activity.RESULT_OK) {
-            int type = data.getIntExtra(Constants.MEDIA_TYPE, -1);
+            int type = data.getIntExtra(Configs.MEDIA_TYPE, -1);
             Uri res = data.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
             Log.i("result", res.toString());
-            if(type == Constants.MEDIA_PICTURE){
+            if(type == Configs.MEDIA_PICTURE){
                 mainPresenter.setImage(false, res);
-            } else if(type == Constants.MEDIA_MOVIE){
+            } else if(type == Configs.MEDIA_MOVIE){
                 mainPresenter.setImage(true, res);
             }
 

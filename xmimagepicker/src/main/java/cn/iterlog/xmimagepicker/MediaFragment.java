@@ -17,6 +17,7 @@ import java.io.File;
 
 import cn.iterlog.xmimagepicker.Utils.MediaController;
 import cn.iterlog.xmimagepicker.adapter.MediaAdapter;
+import cn.iterlog.xmimagepicker.anim.SlideInBottomAnimationAdapter;
 import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
 import cn.iterlog.xmimagepicker.videoplay.VideoActivity;
@@ -63,7 +64,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
             mRecy.setLayoutManager(gridLayoutManager);
         }
         mAdapter = new MediaAdapter(MediasLogic.getInstance().loadMedias(mediaType));
-        mRecy.setAdapter(mAdapter);
+        mRecy.setAdapter(new SlideInBottomAnimationAdapter(mAdapter));
         if (MediasLogic.getInstance().isLoading()) {
             mProgressBar.setVisibility(View.GONE);
         } else {
