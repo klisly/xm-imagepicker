@@ -3,6 +3,7 @@ package cn.iterlog.xmimagepicker;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,8 @@ import cn.iterlog.xmimagepicker.adapter.MediaAdapter;
 import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
 import cn.iterlog.xmimagepicker.videoplay.VideoActivity;
+
+import static android.app.Activity.RESULT_OK;
 
 public class MediaFragment extends Fragment implements MediasLogic.MediaListener {
     private static final String ARG_MEDIA_TYPE = "ARG_MEDIA_TYPE";
@@ -72,14 +75,32 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
             public void onMediaView(MediaAdapter.MediaHolder view, int position, MediaController.PhotoEntry photoEntry) {
                 try {
 
-                    if(photoEntry.isVideo){
-                        Intent intent = new Intent(getActivity(), VideoActivity.class);
-                        intent.putExtra("src", photoEntry.path);
-                        getActivity().startActivityForResult(intent, VideoActivity.REQUEST_PICK);
+                    if (photoEntry.isVideo) {
+                        if (Configs.isPreviewVideo()) {
+                            Intent intent = new Intent(getActivity(), VideoActivity.class);
+                            intent.putExtra("src", photoEntry.path);
+                            getActivity().startActivityForResult(intent, VideoActivity.REQUEST_PICK);
+                        } else {
+                            Intent intent = new Intent();
+                            intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_PICTURE);
+                            Uri uri = Uri.fromFile(new File(photoEntry.path));
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                            getActivity().setResult(RESULT_OK, intent);
+                            getActivity().onBackPressed();
+                        }
                     } else {
-                        Uri destination = Uri.fromFile(new File(getContext().getCacheDir(), "cropped"));
-                        Uri src = Uri.fromFile(new File(photoEntry.path));
-                        Crop.of(src, destination).asSquare().start(getActivity());
+                        if (Configs.isEditImage()) {
+                            Uri destination = Uri.fromFile(new File(getContext().getCacheDir(), "cropped"));
+                            Uri src = Uri.fromFile(new File(photoEntry.path));
+                            Crop.of(src, destination).asSquare().start(getActivity());
+                        } else {
+                            Intent intent = new Intent();
+                            intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_PICTURE);
+                            Uri uri = Uri.fromFile(new File(photoEntry.path));
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                            getActivity().setResult(RESULT_OK, intent);
+                            getActivity().onBackPressed();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -98,7 +119,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
 
     @Override
     public void onMediaLoaded(int type) {
-        if (type ==  mediaType) {
+        if (type == mediaType) {
             mAdapter.setmMedias(MediasLogic.getInstance().loadMedias(mediaType));
             mAdapter.notifyDataSetChanged();
         }

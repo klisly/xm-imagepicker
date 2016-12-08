@@ -32,6 +32,8 @@ import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
 import cn.iterlog.xmimagepicker.videoplay.VideoActivity;
 
+import static android.R.attr.type;
+
 public class PickerActivity extends BaseActivity implements NotificationCenter.NotificationCenterDelegate, MediasLogic.MediaListener {
 
     protected int classGuid = 0;
@@ -41,6 +43,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
     private AlbumAdapter albumAdapter;
     private RecyclerView dirRecy;
     private TextView mTvChooseName;
+    private Toolbar toolbar;
     private Point point = new Point();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,15 +125,19 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             }
         });
         mTabLayout.setupWithViewPager(mViewPager);
+        if(Configs.isSingleMedia()){
+            mTabLayout.setVisibility(View.GONE);
+            toolbar.setTitle(Configs.getNames().get(0));
+        }
     }
 
     private int getMediaType(int position) {
         if(position == 0){
-            return Constants.MEDIA_PICTURE;
+            return Configs.MEDIA_PICTURE;
         } else if(position == 1){
-            return Constants.MEDIA_MOVIE;
+            return Configs.MEDIA_MOVIE;
         }
-        return Constants.MEDIA_PICTURE;
+        return Configs.MEDIA_PICTURE;
     }
 
     @Override
@@ -144,7 +151,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
     }
 
     private void initToolBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.media_title);
         toolbar.setNavigationIcon(R.drawable.ic_back_white);
         setSupportActionBar(toolbar);
@@ -243,6 +250,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         NotificationCenter.getInstance().removeObserver(this, NotificationCenter.albumsDidLoaded);
         MediasLogic.getInstance().unRegisterListener(this);
         MediasLogic.getInstance().clearData();
+        Configs.reset();
         super.onDestroy();
     }
 
@@ -263,10 +271,10 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK) {
             if (requestCode == Crop.REQUEST_CROP) {
-                data.putExtra("type", Constants.MEDIA_PICTURE);
+                data.putExtra("type", Configs.MEDIA_PICTURE);
                 handleCrop(resultCode, data);
             } else if (requestCode == VideoActivity.REQUEST_PICK) {
-                data.putExtra("type", Constants.MEDIA_MOVIE);
+                data.putExtra("type", Configs.MEDIA_MOVIE);
                 setResult(RESULT_OK, data);
                 finish();
             }
@@ -292,34 +300,30 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
      * @param limitPickPhoto  照片选取限制
      * @param requestCode     请求码
      */
-    public static void openActivity(
+    private static void openActivity(
             Activity activity,
             String[] filterMimeTypes,
             boolean singlePhoto,
             int limitPickPhoto,
             int requestCode) {
-        limitPickPhoto = singlePhoto ? 1 : limitPickPhoto > 0 ? limitPickPhoto : 1;
+//        limitPickPhoto = singlePhoto ? 1 : limitPickPhoto > 0 ? limitPickPhoto : 1;
         Intent intent = new Intent(activity, PickerActivity.class);
-        intent.putExtra(Constants.SINGLE_PHOTO, singlePhoto);
-        intent.putExtra(Constants.LIMIT_PICK_PHOTO, limitPickPhoto);
-        intent.putExtra(Constants.FILTER_MIME_TYPES, filterMimeTypes);
-        intent.putExtra(Constants.HAS_CAMERA, false);
-        intent.putExtra(Constants.MEDIA_TYPE, Constants.MEDIA_TYPE);
+
+//        intent.putExtra(Configs.SINGLE_PHOTO, singlePhoto);
+//        intent.putExtra(Configs.LIMIT_PICK_PHOTO, limitPickPhoto);
+//        intent.putExtra(Configs.FILTER_MIME_TYPES, filterMimeTypes);
+//        intent.putExtra(Configs.HAS_CAMERA, false);
+//        intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_TYPE);
         activity.startActivityForResult(intent, requestCode);
     }
 
-    public static void openActivity(Activity activity, boolean singlePhoto, int limitPickPhoto,
-                                    int requestCode) {
-        openActivity(activity, null, singlePhoto, limitPickPhoto, requestCode);
-    }
-
-    public static void openActivity(Activity activity, boolean singlePhoto, int requestCode) {
-        openActivity(activity, null, singlePhoto, 1, requestCode);
+    public static void openActivity(Activity activity, int requestCode) {
+        openActivity(activity, null, true, 1, requestCode);
     }
 
     @Override
     public void onMediaLoaded(int type) {
-        if(type == Constants.NOTIFY_TYPE_DIRECTORY){
+        if(type == Configs.NOTIFY_TYPE_DIRECTORY){
             albumAdapter.setAlbums(MediasLogic.getInstance().getChooseAlbum());
             albumAdapter.notifyDataSetChanged();
             String name = MediasLogic.getInstance().getChooseAlbumName();

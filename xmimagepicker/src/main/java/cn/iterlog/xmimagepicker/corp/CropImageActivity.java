@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
 
-import cn.iterlog.xmimagepicker.Constants;
+import cn.iterlog.xmimagepicker.Configs;
 import cn.iterlog.xmimagepicker.R;
 
 /*
@@ -460,7 +460,7 @@ public class CropImageActivity extends MonitoredActivity {
 
     private void setResultUri(Uri uri) {
         Intent intent = new Intent();
-        intent.putExtra(Constants.MEDIA_TYPE, Constants.MEDIA_PICTURE);
+        intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_PICTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         setResult(RESULT_OK, intent);
     }

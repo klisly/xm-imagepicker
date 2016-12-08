@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.iterlog.xmimagepicker.Constants;
+import cn.iterlog.xmimagepicker.Configs;
 import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.R;
 import cn.iterlog.xmimagepicker.Utils.MediaController;
@@ -51,7 +51,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MediaHolder>
     public void onBindViewHolder(final MediaHolder holder, final int position) {
         MediaController.AlbumEntry albumEntry = albums.get(position);
         holder.mTvName.setText(albumEntry.bucketName);
-        String infoSuffix = albumEntry.isVideo? Constants.VIDEO_ALBUM_SUFFIX:Constants.IMAGE_ALBUM_SUFFIX;
+        String infoSuffix = albumEntry.isVideo? Configs.VIDEO_ALBUM_SUFFIX: Configs.IMAGE_ALBUM_SUFFIX;
         holder.mTvInfo.setText(albumEntry.photos.size() + infoSuffix);
         if (albumEntry.isVideo) {
             Gallery.picasso.load(VideoRequestHandler.SCHEME_VIDEO + ":" + albumEntry.coverPhoto.path)

@@ -68,7 +68,6 @@ class CropUtil {
                     return ExifInterface.ORIENTATION_UNDEFINED;
             }
         } catch (IOException e) {
-            Log.e("Error getting Exif data", e);
             return 0;
         }
     }

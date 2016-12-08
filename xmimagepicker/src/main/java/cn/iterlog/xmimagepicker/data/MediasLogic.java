@@ -7,13 +7,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.iterlog.xmimagepicker.Constants;
+import cn.iterlog.xmimagepicker.Configs;
 import cn.iterlog.xmimagepicker.Utils.MediaController;
 
 public class MediasLogic {
     private static MediasLogic ourInstance = new MediasLogic();
     private String[] filterMimeTypes = null;
-    private int mediaType = Constants.MEDIA_PICTURE;
+    private int mediaType = Configs.MEDIA_PICTURE;
     private int pictueAlbumIndex = 0;
     private int videoAlbumIndex = 0;
     private ArrayList<MediaController.AlbumEntry> pictureAlbums = new ArrayList<>();
@@ -50,8 +50,8 @@ public class MediasLogic {
 
     public void setPictureAlbums(ArrayList<MediaController.AlbumEntry> pictureAlbums) {
         this.pictureAlbums = pictureAlbums;
-        notify(Constants.MEDIA_PICTURE);
-        notify(Constants.NOTIFY_TYPE_DIRECTORY);
+        notify(Configs.MEDIA_PICTURE);
+        notify(Configs.NOTIFY_TYPE_DIRECTORY);
     }
 
     public ArrayList<MediaController.AlbumEntry> getVideoAlbums() {
@@ -60,8 +60,8 @@ public class MediasLogic {
 
     public void setVideoAlbums(ArrayList<MediaController.AlbumEntry> videoAlbums) {
         this.videoAlbums = videoAlbums;
-        notify(Constants.MEDIA_MOVIE);
-        notify(Constants.NOTIFY_TYPE_DIRECTORY);
+        notify(Configs.MEDIA_MOVIE);
+        notify(Configs.NOTIFY_TYPE_DIRECTORY);
     }
 
     public HashMap<Integer, MediaController.PhotoEntry> getSelectedPhotos() {
@@ -88,9 +88,9 @@ public class MediasLogic {
     }
 
     public List<MediaController.PhotoEntry> loadMedias(int mediaType) {
-        if (mediaType == Constants.MEDIA_PICTURE && MediasLogic.getInstance().getPictureAlbums().size() > 0) {
+        if (mediaType == Configs.MEDIA_PICTURE && MediasLogic.getInstance().getPictureAlbums().size() > 0) {
             return MediasLogic.getInstance().getPictureAlbums().get(pictueAlbumIndex).photos;
-        } else if (mediaType == Constants.MEDIA_MOVIE && MediasLogic.getInstance().getVideoAlbums().size() > 0) {
+        } else if (mediaType == Configs.MEDIA_MOVIE && MediasLogic.getInstance().getVideoAlbums().size() > 0) {
             return MediasLogic.getInstance().getVideoAlbums().get(videoAlbumIndex).photos;
         }
         return Collections.EMPTY_LIST;
@@ -105,22 +105,22 @@ public class MediasLogic {
     }
 
     public List<MediaController.AlbumEntry> getChooseAlbum() {
-        if(mediaType == Constants.MEDIA_PICTURE){
+        if(mediaType == Configs.MEDIA_PICTURE){
             return pictureAlbums;
-        } else if(mediaType == Constants.MEDIA_MOVIE){
+        } else if(mediaType == Configs.MEDIA_MOVIE){
             return videoAlbums;
         }
         return Collections.EMPTY_LIST;
     }
 
     public String getChooseAlbumName() {
-        if(mediaType == Constants.MEDIA_PICTURE){
+        if(mediaType == Configs.MEDIA_PICTURE){
             if(pictureAlbums.size() > pictueAlbumIndex){
                 return pictureAlbums.get(pictueAlbumIndex).bucketName;
             } else {
                 return "所有图片";
             }
-        } else if(mediaType == Constants.MEDIA_MOVIE){
+        } else if(mediaType == Configs.MEDIA_MOVIE){
             if(videoAlbums.size() > videoAlbumIndex){
                 return videoAlbums.get(videoAlbumIndex).bucketName;
             } else {
@@ -133,24 +133,24 @@ public class MediasLogic {
     public void setChooIndex(boolean isVideo, int position) {
         if(isVideo){
             videoAlbumIndex = position;
-            notify(Constants.MEDIA_MOVIE);
+            notify(Configs.MEDIA_MOVIE);
         } else {
             pictueAlbumIndex = position;
-            notify(Constants.MEDIA_PICTURE);
+            notify(Configs.MEDIA_PICTURE);
         }
-        notify(Constants.NOTIFY_TYPE_DIRECTORY);
+        notify(Configs.NOTIFY_TYPE_DIRECTORY);
     }
 
     public void clearData() {
-        mediaType = Constants.MEDIA_PICTURE;
+        mediaType = Configs.MEDIA_PICTURE;
         pictueAlbumIndex = 0;
         videoAlbumIndex = 0;
     }
 
     public int getChoosePosition() {
-        if(mediaType == Constants.MEDIA_PICTURE){
+        if(mediaType == Configs.MEDIA_PICTURE){
             return pictueAlbumIndex;
-        } else if(mediaType == Constants.MEDIA_MOVIE){
+        } else if(mediaType == Configs.MEDIA_MOVIE){
             return videoAlbumIndex;
         }
         return 0;
@@ -169,6 +169,6 @@ public class MediasLogic {
     public void updateMediaType(int mediaType){
         this.mediaType = mediaType;
         Log.i("MediasLogic", "updateMediaType mediaType:"+mediaType);
-        notify(Constants.NOTIFY_TYPE_DIRECTORY);
+        notify(Configs.NOTIFY_TYPE_DIRECTORY);
     }
 }

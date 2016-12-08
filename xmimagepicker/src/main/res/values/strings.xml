@@ -35,7 +35,8 @@
     <string name="media_title">媒体</string>
     <string name="picture">图片</string>
     <string name="video">视频</string>
-
+    <string name="music">音乐</string>
+    <string name="document">文档</string>
     <dimen name="tab_height">36dp</dimen>
     <string name="crop__saving">正在保存图片</string>
     <string name="crop__wait">请稍等</string>
