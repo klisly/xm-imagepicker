@@ -18,10 +18,10 @@ public class Configs {
     public static final String IMAGE_ALBUM_SUFFIX = "张图片";
     public static final String VIDEO_ALBUM_SUFFIX = "个视频";
 
-    public static int NOTIFY_TYPE_MEDIA  = 1;
-    public static int NOTIFY_TYPE_DIRECTORY  = 21;
+    public static int NOTIFY_TYPE_MEDIA = 1;
+    public static int NOTIFY_TYPE_DIRECTORY = 21;
+    public static int THUMB_SIZE = 512;
 
-    private static int medias = 1;
     private static boolean editImage = true;
     private static boolean previewVideo = true;
 
@@ -33,49 +33,41 @@ public class Configs {
         Configs.editImage = editImage;
     }
 
-    public static boolean isSingleMedia(){ // 小余最大MEDIA_TYPE的值，那么只有一种类型
-        if(medias <= MEDIA_MUSIC){
+    public static boolean isSingleMedia() { // 小余最大MEDIA_TYPE的值，那么只有一种类型
+        if (types.size() <= 1) {
             return true;
         }
         return false;
     }
-    private static List<String> names = null;
-    public static List<String> getNames(){
-        if(names == null){
-            List<String> list =new ArrayList<>();
-            if((medias &MEDIA_PICTURE) > 0){
-                list.add(Gallery.applicationContext.getString(R.string.picture));
-            } else if((medias &MEDIA_MOVIE) > 0){
-                list.add(Gallery.applicationContext.getString(R.string.video));
-            } else if((medias &MEDIA_DOCUMENT) > 0){
-                list.add(Gallery.applicationContext.getString(R.string.document));
-            } else if((medias &MEDIA_MUSIC) > 0){
-                list.add(Gallery.applicationContext.getString(R.string.music));
-            }
-            names = list;
-        }
+
+    private static List<String> names = new ArrayList<>();
+
+    public static List<String> getNames() {
         return names;
     }
-    private static List<Integer> types = null;
-    public static List<Integer> getMedias(){
-        if(types == null) {
-            List<Integer> list = new ArrayList<>();
-            if ((medias & MEDIA_PICTURE) > 0) {
-                list.add(MEDIA_PICTURE);
-            } else if ((medias & MEDIA_MOVIE) > 0) {
-                list.add(MEDIA_MOVIE);
-            } else if ((medias & MEDIA_DOCUMENT) > 0) {
-                list.add(MEDIA_DOCUMENT);
-            } else if ((medias & MEDIA_MUSIC) > 0) {
-                list.add(MEDIA_MUSIC);
-            }
-            types = list;
-        }
-        return types;
-    };
 
-    public static void setMedias(int medias) {
-        Configs.medias = medias;
+    private static List<Integer> types = new ArrayList<>();
+
+    public static List<Integer> getMedias() {
+        return types;
+    }
+
+    public static void addMedia(int type) {
+
+        if (type == MEDIA_PICTURE) {
+            types.add(MEDIA_PICTURE);
+            names.add(Gallery.applicationContext.getString(R.string.picture));
+
+        } else if (type == MEDIA_MOVIE) {
+            types.add(MEDIA_MOVIE);
+            names.add(Gallery.applicationContext.getString(R.string.video));
+        } else if (type == MEDIA_DOCUMENT) {
+            types.add(MEDIA_DOCUMENT);
+            names.add(Gallery.applicationContext.getString(R.string.document));
+        } else if (type == MEDIA_MUSIC) {
+            types.add(MEDIA_MUSIC);
+            names.add(Gallery.applicationContext.getString(R.string.music));
+        }
     }
 
     public static boolean isPreviewVideo() {
@@ -89,8 +81,7 @@ public class Configs {
     public static void reset() {
         editImage = true;
         previewVideo = true;
-        Configs.medias = MEDIA_PICTURE|MEDIA_MOVIE;
-        names = null;
-        types = null;
+        Configs.types.clear();
+        Configs.names.clear();
     }
 }

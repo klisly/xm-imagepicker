@@ -55,7 +55,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MediaHolder>
         holder.mTvInfo.setText(albumEntry.photos.size() + infoSuffix);
         if (albumEntry.isVideo) {
             Gallery.picasso.load(VideoRequestHandler.SCHEME_VIDEO + ":" + albumEntry.coverPhoto.path)
-                    .resize(Gallery.THUMB_SIZE, Gallery.THUMB_SIZE)
+                    .resize(Configs.THUMB_SIZE, Configs.THUMB_SIZE)
                     .centerCrop()
                     .placeholder(R.drawable.nophotos)
                     .error(R.drawable.nophotos).into(holder.mThumb);
@@ -63,7 +63,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MediaHolder>
             Uri imageURI = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Integer.toString(albumEntry.coverPhoto.imageId));
             Gallery.picasso
                     .load(imageURI)
-                    .resize(Gallery.THUMB_SIZE, Gallery.THUMB_SIZE)
+                    .resize(Configs.THUMB_SIZE, Configs.THUMB_SIZE)
                     .centerCrop()
                     .placeholder(R.drawable.nophotos)
                     .error(R.drawable.nophotos)

@@ -32,8 +32,6 @@ import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
 import cn.iterlog.xmimagepicker.videoplay.VideoActivity;
 
-import static android.R.attr.type;
-
 public class PickerActivity extends BaseActivity implements NotificationCenter.NotificationCenterDelegate, MediasLogic.MediaListener {
 
     protected int classGuid = 0;
@@ -53,9 +51,6 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         initToolBar();
         getWindowManager().getDefaultDisplay().getSize(point);
         Log.i("PickerActivity","Size:"+point);
-        initViewPager();
-        initAlbumData();
-        loadMediaData();
         mTvChooseName = (TextView) findViewById(R.id.tv_dir);
         mTvChooseName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +58,10 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
                 showDir();
             }
         });
+        MediasLogic.getInstance().updateMediaType(Configs.getMedias().get(0));
+        initViewPager();
+        initAlbumData();
+        loadMediaData();
         MediasLogic.getInstance().registerListener(this, this);
     }
 
@@ -291,34 +290,9 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         }
     }
 
-    /**
-     * 打开相册
-     *
-     * @param filterMimeTypes 需要过滤掉的媒体文件类型，以MimeType标识：{http://www.w3school.com.cn/media/media_mimeref.asp}
-     *                        <span>eg:new String[]{"image/gif","image/jpeg"}<span/>
-     * @param singlePhoto     true:单选 false:多选
-     * @param limitPickPhoto  照片选取限制
-     * @param requestCode     请求码
-     */
-    private static void openActivity(
-            Activity activity,
-            String[] filterMimeTypes,
-            boolean singlePhoto,
-            int limitPickPhoto,
-            int requestCode) {
-//        limitPickPhoto = singlePhoto ? 1 : limitPickPhoto > 0 ? limitPickPhoto : 1;
-        Intent intent = new Intent(activity, PickerActivity.class);
-
-//        intent.putExtra(Configs.SINGLE_PHOTO, singlePhoto);
-//        intent.putExtra(Configs.LIMIT_PICK_PHOTO, limitPickPhoto);
-//        intent.putExtra(Configs.FILTER_MIME_TYPES, filterMimeTypes);
-//        intent.putExtra(Configs.HAS_CAMERA, false);
-//        intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_TYPE);
-        activity.startActivityForResult(intent, requestCode);
-    }
-
     public static void openActivity(Activity activity, int requestCode) {
-        openActivity(activity, null, true, 1, requestCode);
+        Intent intent = new Intent(activity, PickerActivity.class);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     @Override

@@ -8,7 +8,6 @@ import com.squareup.picasso.Picasso;
 import cn.iterlog.xmimagepicker.Utils.VideoRequestHandler;
 
 public class Gallery {
-    public static int THUMB_SIZE = 256;
 
     public volatile static Application applicationContext;
     public volatile static Handler applicationHandler;

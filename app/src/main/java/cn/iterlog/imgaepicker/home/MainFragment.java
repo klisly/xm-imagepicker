@@ -31,6 +31,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import cn.iterlog.imgaepicker.R;
+import cn.iterlog.xmimagepicker.Configs;
+import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.PickerActivity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -82,6 +84,25 @@ public class MainFragment extends Fragment implements MainContract.View {
                 mPresenter.showMultiChoose();
             }
         });
+
+        root.findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMultiChoose();
+            }
+        });
+        root.findViewById(R.id.btn1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPictureChoose();
+            }
+        });
+        root.findViewById(R.id.btn2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showVideoChoose();
+            }
+        });
         setHasOptionsMenu(false);
         setRetainInstance(true);
         return root;
@@ -90,11 +111,33 @@ public class MainFragment extends Fragment implements MainContract.View {
 
     @Override
     public void showSingleChoose() {
+        Configs.addMedia(Configs.MEDIA_MOVIE);
+        Configs.addMedia(Configs.MEDIA_PICTURE);
+        Configs.THUMB_SIZE = 256;
+        PickerActivity.openActivity(getActivity(), 12);
+    }
+
+    public void showPictureChoose() {
+        Gallery.init(getActivity().getApplication());
+        Configs.addMedia(Configs.MEDIA_PICTURE);
+        Configs.THUMB_SIZE = 256;
+        PickerActivity.openActivity(getActivity(), 12);
+    }
+
+
+    public void showVideoChoose() {
+        Gallery.init(getActivity().getApplication());
+        Configs.addMedia(Configs.MEDIA_MOVIE);
+        Configs.THUMB_SIZE = 256;
         PickerActivity.openActivity(getActivity(), 12);
     }
 
     @Override
     public void showMultiChoose() {
+        Gallery.init(getActivity().getApplication());
+        Configs.addMedia(Configs.MEDIA_MOVIE);
+        Configs.addMedia(Configs.MEDIA_PICTURE);
+        Configs.THUMB_SIZE = 256;
         PickerActivity.openActivity(getActivity(), 12);
     }
 

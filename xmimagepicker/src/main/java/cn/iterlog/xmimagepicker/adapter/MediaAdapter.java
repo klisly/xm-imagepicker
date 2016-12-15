@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import java.util.List;
 
+import cn.iterlog.xmimagepicker.Configs;
 import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.R;
 import cn.iterlog.xmimagepicker.Utils.MediaController;
@@ -49,7 +50,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder>
         MediaController.PhotoEntry photoEntry = mMedias.get(position);
         if (photoEntry.isVideo) {
             Gallery.picasso.load(VideoRequestHandler.SCHEME_VIDEO + ":" + photoEntry.path)
-                    .resize(Gallery.THUMB_SIZE, Gallery.THUMB_SIZE)
+                    .resize(Configs.THUMB_SIZE, Configs.THUMB_SIZE)
                     .centerCrop()
                     .placeholder(R.drawable.nophotos)
                     .error(R.drawable.nophotos).into(holder.mPortraitView);
@@ -58,7 +59,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder>
             Uri imageURI = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Integer.toString(photoEntry.imageId));
             Gallery.picasso
                     .load(imageURI)
-                    .resize(Gallery.THUMB_SIZE, Gallery.THUMB_SIZE)
+                    .resize(Configs.THUMB_SIZE, Configs.THUMB_SIZE)
                     .centerCrop()
                     .placeholder(R.drawable.nophotos)
                     .error(R.drawable.nophotos)

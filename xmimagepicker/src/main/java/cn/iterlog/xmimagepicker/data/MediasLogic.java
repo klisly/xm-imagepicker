@@ -26,14 +26,7 @@ public class MediasLogic {
     }
 
     private MediasLogic() {
-    }
 
-    public static MediasLogic getOurInstance() {
-        return ourInstance;
-    }
-
-    public static void setOurInstance(MediasLogic ourInstance) {
-        MediasLogic.ourInstance = ourInstance;
     }
 
     public String[] getFilterMimeTypes() {
