@@ -18,7 +18,23 @@
         app:layout_heightPercent="100%w"
         app:layout_widthPercent="100%w" />
 
-
+    <cn.iterlog.xmimagepicker.RippleChoiceView
+        android:id="@+id/choicview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_heightPercent="32%w"
+        app:layout_widthPercent="32%w"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        app:layout_paddingPercent="6%w"
+        app:borderWidth="2dp"
+        app:checkedColor="@color/green"
+        app:backgroundColor="#77000000"
+        app:borderColor="@color/white"
+        app:crossColor="@android:color/white"
+        app:checked="false"
+        app:crossType="cross"
+        app:rippleduration="300" />
     <ImageView
         android:id="@+id/iv_video_tag"
         android:layout_width="wrap_content"

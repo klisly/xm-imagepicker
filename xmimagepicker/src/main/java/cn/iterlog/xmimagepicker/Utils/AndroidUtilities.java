@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -625,5 +626,40 @@ public class AndroidUtilities {
 
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * 获取视频指定位置缩略图
+     *
+     * @param filePath
+     * @param time     seconds
+     * @return
+     */
+    public static Bitmap createVideoThumbnail(String filePath, int time) {
+        Bitmap bitmap = null;
+        if (filePath == null || filePath == "") {
+            bitmap = Bitmap.createBitmap(480, 320, Bitmap.Config.ARGB_8888);
+        } else {
+            android.media.MediaMetadataRetriever retriever = new android.media.MediaMetadataRetriever();
+            try {
+                retriever.setDataSource(filePath);
+                if (time == 0) {
+                    bitmap = retriever.getFrameAtTime(1);
+                } else {
+                    bitmap = retriever.getFrameAtTime(time * 1000); //position为全局变量，即视频播放到的具体位置，单位为毫秒
+                }
+            } catch (IllegalArgumentException ex) {
+                // Assume this is a corrupt video file
+            } catch (RuntimeException ex) {
+                // Assume this is a corrupt video file.
+            } finally {
+                try {
+                    retriever.release();
+                } catch (RuntimeException ex) {
+                    // Ignore failures while cleaning up.
+                }
+            }
+        }
+        return bitmap;
     }
 }

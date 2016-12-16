@@ -1,0 +1,14 @@
+<resources>
+    <declare-styleable name="RippleChoiceView">
+        <attr name="borderColor" format="color" />
+        <attr name="checkedColor" format="color" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="crossColor" format="color" />
+        <attr name="rippleBorderWidth" format="dimension" />
+        <attr name="rippleduration" format="integer" />
+        <attr name="checked" format="boolean" />
+        <attr name="crossType" format="string" />
+        <attr name="number" format="integer" />
+        <attr name="textSize" format="dimension" />
+    </declare-styleable>
+</resources>

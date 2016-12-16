@@ -23,15 +23,18 @@
         <activity
             android:name="cn.iterlog.xmimagepicker.PickerActivity"
             android:theme="@style/ImageTheme"
+            android:screenOrientation="portrait"
             >
         </activity>
         <activity
             android:theme="@style/ImageTheme"
+            android:screenOrientation="portrait"
             android:name="cn.iterlog.xmimagepicker.corp.CropImageActivity"></activity>
 
         <activity
             android:theme="@style/ImageTheme"
-            android:name="cn.iterlog.xmimagepicker.videoplay.VideoActivity">
+            android:screenOrientation="portrait"
+            android:name="cn.iterlog.xmimagepicker.videoplay.VideoPlyerActivity">
         </activity>
 
 

@@ -47,4 +47,5 @@
     <string name="choose">选择</string>
     <string name="no_video">找不到指定的视屏资源</string>
     <string name="video_preview">预览</string>
+    <string name="play_error">视频播放出错</string>
 </resources>

@@ -20,7 +20,7 @@ import cn.iterlog.xmimagepicker.adapter.MediaAdapter;
 import cn.iterlog.xmimagepicker.anim.SlideInBottomAnimationAdapter;
 import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
-import cn.iterlog.xmimagepicker.videoplay.VideoActivity;
+import cn.iterlog.xmimagepicker.videoplay.VideoPlyerActivity;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -78,9 +78,10 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
 
                     if (photoEntry.isVideo) {
                         if (Configs.isPreviewVideo()) {
-                            Intent intent = new Intent(getActivity(), VideoActivity.class);
-                            intent.putExtra("src", photoEntry.path);
-                            getActivity().startActivityForResult(intent, VideoActivity.REQUEST_PICK);
+                            Intent intent = new Intent(getActivity(), VideoPlyerActivity.class);
+                            intent.putExtra(VideoPlyerActivity.PARAM_TYPE, VideoPlyerActivity.TYPE_PICK);
+                            intent.putExtra(VideoPlyerActivity.PARAM_SRC, Uri.fromFile(new File(photoEntry.path)));
+                            getActivity().startActivityForResult(intent, VideoPlyerActivity.REQUEST_PICK);
                         } else {
                             Intent intent = new Intent();
                             intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_PICTURE);

@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ import cn.iterlog.xmimagepicker.adapter.AlbumAdapter;
 import cn.iterlog.xmimagepicker.adapter.MediaFagmentAdapter;
 import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
-import cn.iterlog.xmimagepicker.videoplay.VideoActivity;
+import cn.iterlog.xmimagepicker.videoplay.VideoPlyerActivity;
 
 public class PickerActivity extends BaseActivity implements NotificationCenter.NotificationCenterDelegate, MediasLogic.MediaListener {
 
@@ -114,7 +115,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
 
             @Override
             public void onPageSelected(int position) {
-                MediasLogic.getInstance().updateMediaType(getMediaType(position));
+                MediasLogic.getInstance().updateMediaType(Configs.getMedias().get(position));
                 hideDir();
             }
 
@@ -130,14 +131,6 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         }
     }
 
-    private int getMediaType(int position) {
-        if(position == 0){
-            return Configs.MEDIA_PICTURE;
-        } else if(position == 1){
-            return Configs.MEDIA_MOVIE;
-        }
-        return Configs.MEDIA_PICTURE;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -177,7 +170,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         ObjectAnimator translationY = ObjectAnimator.ofFloat(dirRecy, "Y", point.y - size, point.y);
         AnimatorSet animatorSet2 = new AnimatorSet();
         animatorSet2.playTogether(translationY);
-        animatorSet2.setDuration(600);
+        animatorSet2.setDuration(400);
         animatorSet2.setInterpolator(new AccelerateDecelerateInterpolator());
         animatorSet2.start();
         animatorSet2.addListener(new Animator.AnimatorListener() {
@@ -215,7 +208,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
                 ObjectAnimator translationY = ObjectAnimator.ofFloat(dirRecy, "Y", point.y, point.y - size);
                 AnimatorSet animatorSet2 = new AnimatorSet();
                 animatorSet2.playTogether(translationY);
-                animatorSet2.setDuration(600);
+                animatorSet2.setDuration(400);
                 animatorSet2.setInterpolator(new AccelerateDecelerateInterpolator());
                 animatorSet2.start();
                 animatorSet2.addListener(new Animator.AnimatorListener() {
@@ -272,7 +265,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             if (requestCode == Crop.REQUEST_CROP) {
                 data.putExtra("type", Configs.MEDIA_PICTURE);
                 handleCrop(resultCode, data);
-            } else if (requestCode == VideoActivity.REQUEST_PICK) {
+            } else if (requestCode == VideoPlyerActivity.REQUEST_PICK) {
                 data.putExtra("type", Configs.MEDIA_MOVIE);
                 setResult(RESULT_OK, data);
                 finish();
@@ -304,5 +297,11 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             Log.i("PickerActivity", "choose album name:"+name);
             mTvChooseName.setText(name);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.i("PickerActivity","onConfigurationChanged");
     }
 }

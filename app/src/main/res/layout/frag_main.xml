@@ -12,14 +12,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:text="选择图片" />
+        android:text="单选图片(编辑)" />
     <Button
         android:id="@+id/btn2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:text="选择视频" />
+        android:text="单选图片(预览)" />
+    <Button
+        android:id="@+id/btn3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="单选选择视频(预览)" />
     <Button
         android:id="@+id/btn"
         android:layout_width="match_parent"
