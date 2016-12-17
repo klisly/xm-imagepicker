@@ -12,9 +12,9 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.View;
-import android.widget.Toast;
 
 import cn.iterlog.xmimagepicker.R;
+import cn.iterlog.xmimagepicker.Utils.AndroidUtilities;
 
 /**
  * Builder for crop Intents and utils for handling result
@@ -287,7 +287,7 @@ public class Crop {
     }
 
     private static void showImagePickerError(Context context) {
-        Toast.makeText(context.getApplicationContext(), R.string.crop__pick_error, Toast.LENGTH_SHORT).show();
+        AndroidUtilities.showToast(context.getString(R.string.crop__pick_error));
     }
 
 }

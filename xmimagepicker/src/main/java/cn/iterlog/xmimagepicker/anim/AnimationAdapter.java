@@ -25,7 +25,7 @@ import android.view.animation.LinearInterpolator;
 public abstract class AnimationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
   private RecyclerView.Adapter<RecyclerView.ViewHolder> mAdapter;
-  private int mDuration = 300;
+  private int mDuration = 200;
   private Interpolator mInterpolator = new LinearInterpolator();
   private int mLastPosition = -1;
 

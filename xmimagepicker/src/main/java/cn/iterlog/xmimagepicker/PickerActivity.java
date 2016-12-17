@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,10 +24,11 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import cn.iterlog.xmimagepicker.Utils.AndroidUtilities;
 import cn.iterlog.xmimagepicker.Utils.MediaController;
 import cn.iterlog.xmimagepicker.Utils.NotificationCenter;
 import cn.iterlog.xmimagepicker.adapter.AlbumAdapter;
@@ -45,9 +47,11 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
     private RecyclerView dirRecy;
     private TextView mTvChooseName;
     private RippleChoiceView mRcvNumber;
+    private TextView mTvPreview;
     private TextView mTvChoose;
     private Toolbar toolbar;
     private Point point = new Point();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +60,11 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         initToolBar();
         getWindowManager().getDefaultDisplay().getSize(point);
         mTvChooseName = (TextView) findViewById(R.id.tv_dir);
+        mTvPreview = (TextView) findViewById(R.id.tv_preview);
 
         mRcvNumber = (RippleChoiceView) findViewById(R.id.rcv_choice);
         mTvChoose = (TextView) findViewById(R.id.choose);
-        if(Configs.isMultiChoose()){
+        if (Configs.isMultiChoose()) {
             mTvChoose.setVisibility(View.VISIBLE);
             mTvChoose.setTextColor(getResources().getColor(R.color.white_50));
         }
@@ -84,7 +89,33 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         mTvChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (MediasLogic.getInstance().getChooseCount() > 0) {
+                    int vSize = MediasLogic.getInstance().getChooseVideos().size();
+                    int pSize = MediasLogic.getInstance().getChoosePictures().size();
+                    Intent intent = new Intent();
+                    intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_MULTI);
+                    ArrayList<Uri> pictures = new ArrayList<Uri>();
+                    ArrayList<Uri> videos = new ArrayList<Uri>();
+                    for (int i = 0; i < pSize; i++) {
+                        try {
+                            pictures.add(Uri.fromFile(new File(MediasLogic.getInstance().getChoosePictures().get(i).path)));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
+                    for (int i = 0; i < vSize; i++) {
+                        try {
+                            videos.add(Uri.fromFile(new File(MediasLogic.getInstance().getChooseVideos().get(i).path)));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    intent.putParcelableArrayListExtra(Configs.OUT_PUT_VIDEOS, videos);
+                    intent.putParcelableArrayListExtra(Configs.OUT_PUT_IMAGES, pictures);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         });
     }
@@ -147,7 +178,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             }
         });
         mTabLayout.setupWithViewPager(mViewPager);
-        if(Configs.isSingleMedia()){
+        if (Configs.isSingleMedia()) {
             mTabLayout.setVisibility(View.GONE);
             toolbar.setTitle(Configs.getNames().get(0));
         }
@@ -179,13 +210,12 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
 
     @Override
     public void onBackPressed() {
-        if(dirRecy.getVisibility() == View.VISIBLE){
+        if (dirRecy.getVisibility() == View.VISIBLE) {
             hideDir();
         } else {
             super.onBackPressed();
         }
     }
-
 
 
     private void hideDir() {
@@ -217,7 +247,9 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             }
         });
     }
+
     int size;
+
     private void showDir() {
         size = dirRecy.getBottom() - mViewPager.getTop();
         dirRecy.setVisibility(View.VISIBLE);
@@ -241,7 +273,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        Log.i("showDir", "onAnimationStart "+mViewPager.getBottom()+" "+point.y);
+                        Log.i("showDir", "onAnimationStart " + mViewPager.getBottom() + " " + point.y);
                     }
 
                     @Override
@@ -283,7 +315,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             if (requestCode == Crop.REQUEST_CROP) {
                 data.putExtra("type", Configs.MEDIA_PICTURE);
                 handleCrop(resultCode, data);
@@ -301,7 +333,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             setResult(RESULT_OK, result);
             finish();
         } else if (resultCode == Crop.RESULT_ERROR) {
-            Toast.makeText(this, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT).show();
+            AndroidUtilities.showToast(Crop.getError(result).getMessage());
         }
     }
 
@@ -312,15 +344,15 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
 
     @Override
     public void onMediaNotify(int type) {
-        if(type == Configs.NOTIFY_TYPE_DIRECTORY){
+        if (type == Configs.NOTIFY_TYPE_DIRECTORY) {
             albumAdapter.setAlbums(MediasLogic.getInstance().getChooseAlbum());
             albumAdapter.notifyDataSetChanged();
             String name = MediasLogic.getInstance().getChooseAlbumName();
             mTvChooseName.setText(name);
-        } else if(type == Configs.NOTIFY_TYPE_STATUS){
+        } else if (type == Configs.NOTIFY_TYPE_STATUS) {
             int count = MediasLogic.getInstance().getChooseCount();
-            if(count > 0){
-                if(mRcvNumber.getVisibility() != View.VISIBLE){
+            if (count > 0) {
+                if (mRcvNumber.getVisibility() != View.VISIBLE) {
                     mRcvNumber.setVisibility(View.VISIBLE);
                     mRcvNumber.setScaleX(0f);
                     mRcvNumber.setScaleX(0f);
@@ -337,12 +369,14 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
                                     mRcvNumber.setScaleX(1f);
-                                    mRcvNumber.setScaleX(1f);                                }
+                                    mRcvNumber.setScaleX(1f);
+                                }
 
                                 @Override
                                 public void onAnimationCancel(Animator animation) {
                                     mRcvNumber.setScaleX(1f);
-                                    mRcvNumber.setScaleX(1f);                                }
+                                    mRcvNumber.setScaleX(1f);
+                                }
 
                                 @Override
                                 public void onAnimationRepeat(Animator animation) {

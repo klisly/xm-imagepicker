@@ -16,6 +16,7 @@ import cn.iterlog.xmimagepicker.Configs;
 import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.R;
 import cn.iterlog.xmimagepicker.RippleChoiceView;
+import cn.iterlog.xmimagepicker.Utils.AndroidUtilities;
 import cn.iterlog.xmimagepicker.Utils.MediaController;
 import cn.iterlog.xmimagepicker.Utils.VideoRequestHandler;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
@@ -90,8 +91,48 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder>
             holder.mRcv.setOnCheckedChangeListener(new RippleChoiceView.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RippleChoiceView view, boolean isChecked) {
+
+                    if (isChecked) {
+                        if (Configs.isSimpleType()) {
+                            if ((mMedias.get(position).isVideo && MediasLogic.getInstance().getChoosePictures().size() > 0)
+                                    || (!mMedias.get(position).isVideo && MediasLogic.getInstance().getChooseVideos().size() > 0)) {
+                                StringBuilder builder = new StringBuilder();
+                                builder.append("只能选择")
+                                        .append(Configs.getImageSize())
+                                        .append("张图片或者")
+                                        .append(Configs.getVideoSize())
+                                        .append("条视频");
+                                AndroidUtilities.showToast(builder.toString());
+                                holder.mRcv.setmChecked(false);
+                                return;
+                            }
+                        }
+
+                        if (mMedias.get(position).isVideo
+                                && MediasLogic.getInstance().getChooseVideos().size() >= Configs.getVideoSize()) {
+                            StringBuilder builder = new StringBuilder();
+                            builder.append("只能选择")
+                                    .append(Configs.getVideoSize())
+                                    .append("条视频");
+                            AndroidUtilities.showToast(builder.toString());
+                            holder.mRcv.setmChecked(false);
+                            return;
+                        }
+                        if (!mMedias.get(position).isVideo
+                                && MediasLogic.getInstance().getChoosePictures().size() >= Configs.getImageSize()) {
+                            StringBuilder builder = new StringBuilder();
+                            builder.append("只能选择")
+                                    .append(Configs.getImageSize())
+                                    .append("张图片");
+                            AndroidUtilities.showToast(builder.toString());
+                            holder.mRcv.setmChecked(false);
+                            return;
+                        }
+                    }
+
+
                     listener.onMediaChoose(position, mMedias.get(position), isChecked);
-                    if(isChecked){
+                    if (isChecked) {
                         holder.mPortraitView
                                 .animate()
                                 .scaleX(0.9f)

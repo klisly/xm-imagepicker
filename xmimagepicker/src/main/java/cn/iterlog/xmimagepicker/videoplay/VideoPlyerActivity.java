@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -17,7 +16,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -95,7 +93,7 @@ public class VideoPlyerActivity extends BaseActivity implements SurfaceHolder.Ca
         src = getIntent().getParcelableExtra(PARAM_SRC);
         Log.i(TAG, "src:" + src);
         if (src == null) {
-            Toast.makeText(getApplicationContext(), R.string.no_video, Toast.LENGTH_SHORT).show();
+            AndroidUtilities.showToast(getString(R.string.no_video));
             finish();
             return;
         }
@@ -132,7 +130,7 @@ public class VideoPlyerActivity extends BaseActivity implements SurfaceHolder.Ca
                         public void onClick(View v) {
                             Intent intent = new Intent();
                             intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_MOVIE);
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, src);
+                            intent.putExtra(Configs.OUT_PUT, src);
                             setResult(RESULT_OK, intent);
                             finish();
                         }
@@ -197,7 +195,7 @@ public class VideoPlyerActivity extends BaseActivity implements SurfaceHolder.Ca
     private void onCompletePlay() {
         Log.i(TAG, "curl pos:" + mediaPlayer.getCurrentPosition() + " duration:" + mediaPlayer.getDuration());
         if(mediaPlayer.getDuration() == 0){
-            Toast.makeText(this, R.string.play_error, Toast.LENGTH_SHORT).show();
+            AndroidUtilities.showToast(getString(R.string.play_error));
             finish();
             onStopPlay();
             return;
@@ -325,7 +323,7 @@ public class VideoPlyerActivity extends BaseActivity implements SurfaceHolder.Ca
         } catch (IOException e) {
             e.printStackTrace();
             onStopPlay();
-            Toast.makeText(getApplicationContext(), R.string.play_error, Toast.LENGTH_SHORT).show();
+            AndroidUtilities.showToast(getString(R.string.play_error));
             finish();
             return;
         }

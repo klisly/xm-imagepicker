@@ -113,6 +113,18 @@ public class MainFragment extends Fragment implements MainContract.View {
                 showMultiVideoChoose();
             }
         });
+        root.findViewById(R.id.btn7).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMultiVideoPictureChoose();
+            }
+        });
+        root.findViewById(R.id.btn8).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMultiVpChoose();
+            }
+        });
         setHasOptionsMenu(false);
         setRetainInstance(true);
         return root;
@@ -185,11 +197,36 @@ public class MainFragment extends Fragment implements MainContract.View {
         Configs.setEditImage(false);
         Configs.setPreviewVideo(true);
         setMultiChoose(true);
-//        setMultiChoose(false);
-
         PickerActivity.openActivity(getActivity(), 12);
     }
 
+    public void showMultiVideoPictureChoose() {
+        Gallery.init(getActivity().getApplication());
+        Configs.addMedia(Configs.MEDIA_PICTURE);
+        Configs.addMedia(Configs.MEDIA_MOVIE);
+        Configs.THUMB_SIZE = 256;
+        Configs.setEditImage(false);
+        Configs.setPreviewVideo(true);
+        Configs.setImageSize(6);
+        Configs.setVideoSize(2);
+        Configs.setSimpleType(true);
+        setMultiChoose(true);
+        PickerActivity.openActivity(getActivity(), 12);
+    }
+
+    public void showMultiVpChoose() {
+        Gallery.init(getActivity().getApplication());
+        Configs.addMedia(Configs.MEDIA_PICTURE);
+        Configs.addMedia(Configs.MEDIA_MOVIE);
+        Configs.THUMB_SIZE = 256;
+        Configs.setEditImage(false);
+        Configs.setPreviewVideo(true);
+        Configs.setImageSize(6);
+        Configs.setVideoSize(2);
+        Configs.setSimpleType(false);
+        setMultiChoose(true);
+        PickerActivity.openActivity(getActivity(), 12);
+    }
 
     @Override
     public void showChooseImage(boolean isVideo, Uri uri) {

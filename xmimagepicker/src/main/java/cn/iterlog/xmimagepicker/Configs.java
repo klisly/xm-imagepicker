@@ -10,6 +10,7 @@ public class Configs {
     public static final String FILTER_MIME_TYPES = "FILTER_MIME_TYPES";
     public static final String MEDIA_TYPE = "MEDIA_TYPE";
 
+    public static final int MEDIA_MULTI = 1024;
     public static final int MEDIA_PICTURE = 1;
     public static final int MEDIA_MOVIE = 2;
     public static final int MEDIA_DOCUMENT = 4;
@@ -17,6 +18,10 @@ public class Configs {
 
     public static final String IMAGE_ALBUM_SUFFIX = "张图片";
     public static final String VIDEO_ALBUM_SUFFIX = "个视频";
+
+    public static final String OUT_PUT = "OUT_PUT";
+    public static final String OUT_PUT_IMAGES = "OUT_PUT_IMAGES";
+    public static final String OUT_PUT_VIDEOS = "OUT_PUT_VIDEOS";
 
     public static int NOTIFY_TYPE_MEDIA = 1; // 媒体加载变化
     public static int NOTIFY_TYPE_DIRECTORY = 21; // 目录选择变化
@@ -27,9 +32,9 @@ public class Configs {
     private static boolean editImage = true;
     private static boolean previewVideo = true;
     private static boolean multiChoose = false;
-    private static int imageSize = 1;
+    private static int imageSize = 6;
     private static int videoSize = 1;
-
+    private static boolean simpleType = false;
 
     public static boolean isEditImage() {
         return editImage;
@@ -108,13 +113,22 @@ public class Configs {
         Configs.imageSize = imageSize;
     }
 
+    public static boolean isSimpleType() {
+        return simpleType;
+    }
+
+    public static void setSimpleType(boolean simpleType) {
+        Configs.simpleType = simpleType;
+    }
+
     public static void reset() {
         editImage = true;
         previewVideo = true;
         Configs.types.clear();
         Configs.names.clear();
+        multiChoose = false;
         videoSize = 1;
         imageSize = 1;
-        multiChoose = false;
+        simpleType = false;
     }
 }

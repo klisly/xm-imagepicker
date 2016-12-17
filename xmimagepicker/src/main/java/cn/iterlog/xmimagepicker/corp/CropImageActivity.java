@@ -461,7 +461,7 @@ public class CropImageActivity extends MonitoredActivity {
     private void setResultUri(Uri uri) {
         Intent intent = new Intent();
         intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_PICTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.putExtra(Configs.OUT_PUT, uri);
         setResult(RESULT_OK, intent);
     }
 

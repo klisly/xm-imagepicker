@@ -6,10 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import com.iterlog.swipbackhelper.SwipeBackHelper;
 
 public class BaseActivity extends AppCompatActivity {
-
+    protected static String TAG ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TAG = this.getClass().getSimpleName();
         SwipeBackHelper.onCreate(this);
         SwipeBackHelper.getCurrentPage(this)
                 .setSwipeBackEnable(true)

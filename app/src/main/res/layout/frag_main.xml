@@ -11,6 +11,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".home.MainActivity">
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="256dp"
+            android:layout_height="256dp"
+            android:layout_gravity="center"
+            android:src="@drawable/photoview_placeholder" />
 
         <Button
             android:id="@+id/btn2"
@@ -60,12 +66,20 @@
             android:gravity="center"
             android:text="多选视频" />
 
-        <ImageView
-            android:id="@+id/iv"
-            android:layout_width="256dp"
-            android:layout_height="256dp"
-            android:layout_gravity="center"
-            android:src="@drawable/photoview_placeholder" />
+        <Button
+            android:id="@+id/btn7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:text="多选视频/图片" />
+        <Button
+            android:id="@+id/btn8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:text="多选视频&amp;图片" />
 
     </LinearLayout>
 

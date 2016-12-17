@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
+
+import java.util.List;
 
 import cn.iterlog.imgaepicker.R;
 import cn.iterlog.imgaepicker.util.ActivityUtils;
@@ -38,14 +39,17 @@ public class MainActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (12 == requestCode && resultCode == Activity.RESULT_OK) {
             int type = data.getIntExtra(Configs.MEDIA_TYPE, -1);
-            Uri res = data.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-            Log.i("result", res.toString());
             if(type == Configs.MEDIA_PICTURE){
+                Uri res = data.getParcelableExtra(Configs.OUT_PUT);
                 mainPresenter.setImage(false, res);
             } else if(type == Configs.MEDIA_MOVIE){
+                Uri res = data.getParcelableExtra(Configs.OUT_PUT);
                 mainPresenter.setImage(true, res);
+            } else if(type == Configs.MEDIA_MULTI) {
+                List<Uri> videos = data.getParcelableArrayListExtra(Configs.OUT_PUT_VIDEOS);
+                List<Uri> images = data.getParcelableArrayListExtra(Configs.OUT_PUT_IMAGES);
+                Log.i(TAG, "videos:"+videos+" images:"+images);
             }
-
         }
     }
 }

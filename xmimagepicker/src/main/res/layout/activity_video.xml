@@ -37,7 +37,7 @@
             android:layout_gravity="right"
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
-            android:text="@string/complete"
+            android:text="@string/choose"
             android:clickable="true"
             android:gravity="center"
             android:textColor="@android:color/white"

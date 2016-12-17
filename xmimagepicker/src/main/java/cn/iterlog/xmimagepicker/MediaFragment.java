@@ -77,6 +77,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
             @Override
             public void onMediaView(int position, MediaController.PhotoEntry photoEntry) {
                 try {
+
                     if (Configs.isMultiChoose()) {
                         // TODO 预览算着的图片或者视频
                         if (photoEntry.isVideo) {
@@ -94,7 +95,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
                             } else {
                                 Intent intent = new Intent();
                                 Uri uri = Uri.fromFile(new File(photoEntry.path));
-                                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                                intent.putExtra(Configs.OUT_PUT, uri);
                                 intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_MOVIE);
                                 getActivity().setResult(RESULT_OK, intent);
                                 getActivity().onBackPressed();
@@ -108,7 +109,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
                                 Intent intent = new Intent();
                                 intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_PICTURE);
                                 Uri uri = Uri.fromFile(new File(photoEntry.path));
-                                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                                intent.putExtra(Configs.OUT_PUT, uri);
                                 getActivity().setResult(RESULT_OK, intent);
                                 getActivity().onBackPressed();
                             }
@@ -121,7 +122,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
 
             @Override
             public void onMediaChoose(int position, MediaController.PhotoEntry photoEntry, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     MediasLogic.getInstance().chooseMedia(photoEntry);
                 } else {
                     MediasLogic.getInstance().unChooseMedia(photoEntry);
