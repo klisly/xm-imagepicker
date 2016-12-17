@@ -10,7 +10,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -280,7 +279,6 @@ public class RippleChoiceView extends View {
                 }
 
                 if (isHookShow && mFraction > 0) {// y1 - x1
-                    Log.i("isHookShow", isHookShow + " " + mFraction);
                     if (mFraction < 0.4) {
                         canvas.drawLine(hookStart.x, hookStart.y, getr1x((float) (mFraction / 0.4)), getr1y((float) (mFraction / 0.4)), mUncheckPaint);
                     } else {

@@ -22,10 +22,18 @@ public class Configs {
     public static final String OUT_PUT = "OUT_PUT";
     public static final String OUT_PUT_IMAGES = "OUT_PUT_IMAGES";
     public static final String OUT_PUT_VIDEOS = "OUT_PUT_VIDEOS";
+    public static final int REQUEST_VIDEO_PICK = 60010;
 
     public static int NOTIFY_TYPE_MEDIA = 1; // 媒体加载变化
     public static int NOTIFY_TYPE_DIRECTORY = 21; // 目录选择变化
     public static int NOTIFY_TYPE_STATUS = 22; // Media选中与取消选中的选择
+
+    public static String PREVIEW_TYPE = "PREVIEW_TYPE"; // preview参数
+    public static String PREVIEW_POS = "PREVIEW_POS"; // preview参数
+    public static int PREVIEW_TYPE_VIDEO = 1; // 选择的视频
+    public static int PREVIEW_TYPE_PICTURE = 2; // 选择的图片
+    public static int PREVIEW_TYPE_VIDEO_ALL = 3; // 预览当前Album的所有视频
+    public static int PREVIEW_TYPE_PICTURE_ALL = 4; // 预览当前Album所有的图片
 
     public static int THUMB_SIZE = 512;
 

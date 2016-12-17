@@ -18,8 +18,6 @@ public class BaseActivity extends AppCompatActivity {
                 .setSwipeSensitivity(0.5f)
                 .setSwipeRelateEnable(true)
                 .setSwipeRelateOffset(200);
-        //ViewServer.get(this).addWindow(this);
-
     }
 
     @Override
@@ -32,12 +30,10 @@ public class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         SwipeBackHelper.onDestroy(this);
-        //ViewServer.get(this).removeWindow(this);
     }
 
     public void onResume() {
         super.onResume();
-        //ViewServer.get(this).setFocusedWindow(this);
     }
 
 

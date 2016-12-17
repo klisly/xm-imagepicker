@@ -3,7 +3,6 @@ package cn.iterlog.xmimagepicker;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -71,7 +70,6 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
             mProgressBar.setVisibility(View.VISIBLE);
         }
 
-
         mAdapter.setListener(new MediaAdapter.OnItemChooseListener() {
 
             @Override
@@ -79,11 +77,16 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
                 try {
 
                     if (Configs.isMultiChoose()) {
-                        // TODO 预览算着的图片或者视频
                         if (photoEntry.isVideo) {
-
+                            Intent intent = new Intent(getActivity(), PicturesPreviewActivity.class);
+                            intent.putExtra(Configs.PREVIEW_POS, position);
+                            intent.putExtra(Configs.PREVIEW_TYPE, Configs.PREVIEW_TYPE_VIDEO_ALL);
+                            getActivity().startActivityForResult(intent, Configs.REQUEST_VIDEO_PICK);
                         } else {
-
+                            Intent intent = new Intent(getActivity(), PicturesPreviewActivity.class);
+                            intent.putExtra(Configs.PREVIEW_POS, position);
+                            intent.putExtra(Configs.PREVIEW_TYPE, Configs.PREVIEW_TYPE_PICTURE_ALL);
+                            getActivity().startActivityForResult(intent, Configs.REQUEST_VIDEO_PICK);
                         }
                     } else {
                         if (photoEntry.isVideo) {
@@ -91,7 +94,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
                                 Intent intent = new Intent(getActivity(), VideoPlyerActivity.class);
                                 intent.putExtra(VideoPlyerActivity.PARAM_TYPE, VideoPlyerActivity.TYPE_PICK);
                                 intent.putExtra(VideoPlyerActivity.PARAM_SRC, Uri.fromFile(new File(photoEntry.path)));
-                                getActivity().startActivityForResult(intent, VideoPlyerActivity.REQUEST_PICK);
+                                getActivity().startActivityForResult(intent, Configs.REQUEST_VIDEO_PICK);
                             } else {
                                 Intent intent = new Intent();
                                 Uri uri = Uri.fromFile(new File(photoEntry.path));

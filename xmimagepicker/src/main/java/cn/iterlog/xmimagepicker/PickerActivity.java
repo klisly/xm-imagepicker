@@ -35,7 +35,6 @@ import cn.iterlog.xmimagepicker.adapter.AlbumAdapter;
 import cn.iterlog.xmimagepicker.adapter.MediaFagmentAdapter;
 import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
-import cn.iterlog.xmimagepicker.videoplay.VideoPlyerActivity;
 
 public class PickerActivity extends BaseActivity implements NotificationCenter.NotificationCenterDelegate, MediasLogic.MediaListener {
 
@@ -116,6 +115,19 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
                     setResult(RESULT_OK, intent);
                     finish();
                 }
+            }
+        });
+        mTvPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PickerActivity.this, PicturesPreviewActivity.class);
+                intent.putExtra(Configs.PREVIEW_POS, 0);
+                if(MediasLogic.getInstance().getMediaType() == Configs.MEDIA_MOVIE){
+                    intent.putExtra(Configs.PREVIEW_TYPE, Configs.PREVIEW_TYPE_VIDEO);
+                } else if(MediasLogic.getInstance().getMediaType() == Configs.MEDIA_PICTURE){
+                    intent.putExtra(Configs.PREVIEW_TYPE, Configs.PREVIEW_TYPE_PICTURE);
+                }
+                startActivityForResult(intent, Configs.REQUEST_VIDEO_PICK);
             }
         });
     }
@@ -319,7 +331,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             if (requestCode == Crop.REQUEST_CROP) {
                 data.putExtra("type", Configs.MEDIA_PICTURE);
                 handleCrop(resultCode, data);
-            } else if (requestCode == VideoPlyerActivity.REQUEST_PICK) {
+            } else if (requestCode == Configs.REQUEST_VIDEO_PICK) {
                 data.putExtra("type", Configs.MEDIA_MOVIE);
                 setResult(RESULT_OK, data);
                 finish();
@@ -329,7 +341,6 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
 
     private void handleCrop(int resultCode, Intent result) {
         if (resultCode == RESULT_OK) {
-            Log.i(PickerActivity.class.getCanonicalName(), Crop.getOutput(result).toString());
             setResult(RESULT_OK, result);
             finish();
         } else if (resultCode == Crop.RESULT_ERROR) {
@@ -353,6 +364,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             int count = MediasLogic.getInstance().getChooseCount();
             if (count > 0) {
                 if (mRcvNumber.getVisibility() != View.VISIBLE) {
+                    mTvPreview.setVisibility(View.VISIBLE);
                     mRcvNumber.setVisibility(View.VISIBLE);
                     mRcvNumber.setScaleX(0f);
                     mRcvNumber.setScaleX(0f);
@@ -402,6 +414,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 mRcvNumber.setVisibility(View.INVISIBLE);
+                                mTvPreview.setVisibility(View.INVISIBLE);
                             }
 
                             @Override

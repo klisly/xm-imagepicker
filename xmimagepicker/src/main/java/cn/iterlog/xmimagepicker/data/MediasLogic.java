@@ -236,4 +236,12 @@ public class MediasLogic {
             }
         }
     }
+
+    public int getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(int mediaType) {
+        this.mediaType = mediaType;
+    }
 }

@@ -89,6 +89,7 @@
         android:textSize="14sp"
         android:background="@drawable/btn"
         android:clickable="true"
+        android:visibility="invisible"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:textColor="@color/accentLight"

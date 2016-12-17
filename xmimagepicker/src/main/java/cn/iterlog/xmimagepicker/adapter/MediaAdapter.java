@@ -3,7 +3,6 @@ package cn.iterlog.xmimagepicker.adapter;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +51,6 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder>
 
     @Override
     public void onBindViewHolder(final MediaHolder holder, final int position) {
-        Log.i("MediaAdapter", "position:" + position);
         MediaController.PhotoEntry photoEntry = mMedias.get(position);
         if (photoEntry.isVideo) {
             Gallery.picasso.load(VideoRequestHandler.SCHEME_VIDEO + ":" + photoEntry.path)
