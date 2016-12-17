@@ -139,7 +139,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
     }
 
     @Override
-    public void onMediaLoaded(int type) {
+    public void onMediaNotify(int type) {
         if (type == mediaType) {
             mAdapter.setmMedias(MediasLogic.getInstance().loadMedias(mediaType));
             mAdapter.notifyDataSetChanged();

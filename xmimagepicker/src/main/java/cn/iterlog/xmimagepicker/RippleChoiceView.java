@@ -190,14 +190,14 @@ public class RippleChoiceView extends View {
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                if(!isEnabled()){
+                if (!isEnabled()) {
                     return false;
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 break;
             case MotionEvent.ACTION_UP:
-                if (mIsAnimating ) {
+                if (mIsAnimating) {
                     return true;
                 }
                 if (x + getLeft() < getRight() && y + getTop() < getBottom()) {
@@ -231,7 +231,7 @@ public class RippleChoiceView extends View {
         canvas.drawCircle(mRectF.centerX(), mRectF.centerY(), mRadius - mBorderWidth + 1, mUncheckPaint);
         if (mChecked || mIsAnimating) {
             float stroke = mFraction * mRadius;
-            if(!mIsAnimating){
+            if (!mIsAnimating) {
                 stroke = mRadius;
             }
 
@@ -274,7 +274,7 @@ public class RippleChoiceView extends View {
             }
         } else {
 
-            if(mIsAnimating) {
+            if (mIsAnimating) {
                 if (!mChecked && isHookShow) {
                     mFraction = 1 - mFraction;
                 }
@@ -289,7 +289,7 @@ public class RippleChoiceView extends View {
                     }
                 }
             } else {
-                if(mChecked && isHookShow){
+                if (mChecked && isHookShow) {
                     canvas.drawLine(hookStart.x, hookStart.y, hookMiddle.x + 2, hookMiddle.y + 2, mUncheckPaint);
                     canvas.drawLine(hookMiddle.x, hookMiddle.y, getr2x((float) ((1 - 0.4) / 0.6)), getr2y((float) ((1 - 0.4f) / 0.6)), mUncheckPaint);
                 }

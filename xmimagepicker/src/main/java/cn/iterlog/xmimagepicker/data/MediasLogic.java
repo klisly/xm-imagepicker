@@ -126,6 +126,22 @@ public class MediasLogic {
         return "";
     }
 
+    public ArrayList<MediaController.PhotoEntry> getChoosePictures() {
+        return choosePictures;
+    }
+
+    public void setChoosePictures(ArrayList<MediaController.PhotoEntry> choosePictures) {
+        this.choosePictures = choosePictures;
+    }
+
+    public ArrayList<MediaController.PhotoEntry> getChooseVideos() {
+        return chooseVideos;
+    }
+
+    public void setChooseVideos(ArrayList<MediaController.PhotoEntry> chooseVideos) {
+        this.chooseVideos = chooseVideos;
+    }
+
     public void setChooIndex(boolean isVideo, int position) {
         if(isVideo){
             videoAlbumIndex = position;
@@ -154,13 +170,17 @@ public class MediasLogic {
         return 0;
     }
 
+    public int getChooseCount() {
+       return MediasLogic.getInstance().getChoosePictures().size() + MediasLogic.getInstance().getChooseVideos().size();
+    }
+
     public interface MediaListener {
-        void onMediaLoaded(int type);
+        void onMediaNotify(int type);
     }
 
     private void notify(int type){
         for(MediaListener listener:listeners.values()){
-           listener.onMediaLoaded(type);
+           listener.onMediaNotify(type);
         }
     }
 
@@ -192,7 +212,7 @@ public class MediasLogic {
         } else {
             chooseVideos.add(entry);
         }
-
+        notify(Configs.NOTIFY_TYPE_STATUS);
     }
 
     public void unChooseMedia(final MediaController.PhotoEntry entry){
@@ -201,6 +221,7 @@ public class MediasLogic {
             for(int i = 0; i < length; i++){
                 if(choosePictures.get(i).equals(entry)){
                     choosePictures.remove(i);
+                    notify(Configs.NOTIFY_TYPE_STATUS);
                     return;
                 }
             }
@@ -209,6 +230,7 @@ public class MediasLogic {
             for(int i = 0; i < length; i++){
                 if(chooseVideos.get(i).equals(entry)){
                     chooseVideos.remove(i);
+                    notify(Configs.NOTIFY_TYPE_STATUS);
                     return;
                 }
             }

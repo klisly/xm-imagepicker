@@ -20,6 +20,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +44,8 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
     private AlbumAdapter albumAdapter;
     private RecyclerView dirRecy;
     private TextView mTvChooseName;
+    private RippleChoiceView mRcvNumber;
+    private TextView mTvChoose;
     private Toolbar toolbar;
     private Point point = new Point();
     @Override
@@ -52,17 +56,37 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         initToolBar();
         getWindowManager().getDefaultDisplay().getSize(point);
         mTvChooseName = (TextView) findViewById(R.id.tv_dir);
+
+        mRcvNumber = (RippleChoiceView) findViewById(R.id.rcv_choice);
+        mTvChoose = (TextView) findViewById(R.id.choose);
+        if(Configs.isMultiChoose()){
+            mTvChoose.setVisibility(View.VISIBLE);
+            mTvChoose.setTextColor(getResources().getColor(R.color.white_50));
+        }
+
+        initListener();
+
+        MediasLogic.getInstance().updateMediaType(Configs.getMedias().get(0));
+        initViewPager();
+        initAlbumData();
+        loadMediaData();
+        MediasLogic.getInstance().registerListener(this, this);
+
+    }
+
+    private void initListener() {
         mTvChooseName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDir();
             }
         });
-        MediasLogic.getInstance().updateMediaType(Configs.getMedias().get(0));
-        initViewPager();
-        initAlbumData();
-        loadMediaData();
-        MediasLogic.getInstance().registerListener(this, this);
+        mTvChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void initAlbumData() {
@@ -287,12 +311,78 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
     }
 
     @Override
-    public void onMediaLoaded(int type) {
+    public void onMediaNotify(int type) {
         if(type == Configs.NOTIFY_TYPE_DIRECTORY){
             albumAdapter.setAlbums(MediasLogic.getInstance().getChooseAlbum());
             albumAdapter.notifyDataSetChanged();
             String name = MediasLogic.getInstance().getChooseAlbumName();
             mTvChooseName.setText(name);
+        } else if(type == Configs.NOTIFY_TYPE_STATUS){
+            int count = MediasLogic.getInstance().getChooseCount();
+            if(count > 0){
+                if(mRcvNumber.getVisibility() != View.VISIBLE){
+                    mRcvNumber.setVisibility(View.VISIBLE);
+                    mRcvNumber.setScaleX(0f);
+                    mRcvNumber.setScaleX(0f);
+                    mRcvNumber.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(300)
+                            .setInterpolator(new OvershootInterpolator())
+                            .setListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    mRcvNumber.setScaleX(1f);
+                                    mRcvNumber.setScaleX(1f);                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+                                    mRcvNumber.setScaleX(1f);
+                                    mRcvNumber.setScaleX(1f);                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {
+
+                                }
+                            })
+                            .start();
+                    mTvChoose.setTextColor(getResources().getColor(R.color.white));
+                }
+                mRcvNumber.setmNumber(count);
+
+            } else {
+                mRcvNumber.animate()
+                        .scaleX(0.0f)
+                        .scaleY(0.0f)
+                        .setDuration(300)
+                        .setInterpolator(new AccelerateInterpolator())
+                        .setListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                mRcvNumber.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+                                mRcvNumber.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        })
+                        .start();
+                mTvChoose.setTextColor(getResources().getColor(R.color.white_50));
+            }
         }
     }
 
