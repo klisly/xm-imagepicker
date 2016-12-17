@@ -27,7 +27,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import cn.iterlog.imgaepicker.R;
@@ -35,6 +34,7 @@ import cn.iterlog.xmimagepicker.Configs;
 import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.PickerActivity;
 
+import static cn.iterlog.xmimagepicker.Configs.setMultiChoose;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -44,7 +44,6 @@ public class MainFragment extends Fragment implements MainContract.View {
 
     private MainContract.Presenter mPresenter;
 
-    private Button button1;
     private ImageView chooseIv;
 
     public static MainFragment newInstance() {
@@ -76,16 +75,9 @@ public class MainFragment extends Fragment implements MainContract.View {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.frag_main, container, false);
-        button1 = (Button) root.findViewById(R.id.btn);
         chooseIv = (ImageView) root.findViewById(R.id.iv);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.showMultiChoose();
-            }
-        });
 
-        root.findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
+        root.findViewById(R.id.btn5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showMultiChoose();
@@ -94,13 +86,31 @@ public class MainFragment extends Fragment implements MainContract.View {
         root.findViewById(R.id.btn1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPictureChoose();
+                showPictureEditChoose();
             }
         });
         root.findViewById(R.id.btn2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showPictureChoose();
+            }
+        });
+        root.findViewById(R.id.btn3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 showVideoChoose();
+            }
+        });
+        root.findViewById(R.id.btn4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showVideoPreviewChoose();
+            }
+        });
+        root.findViewById(R.id.btn6).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMultiVideoChoose();
             }
         });
         setHasOptionsMenu(false);
@@ -111,6 +121,8 @@ public class MainFragment extends Fragment implements MainContract.View {
 
     @Override
     public void showSingleChoose() {
+        Gallery.init(getActivity().getApplication());
+        Configs.setEditImage(false);
         Configs.addMedia(Configs.MEDIA_MOVIE);
         Configs.addMedia(Configs.MEDIA_PICTURE);
         Configs.THUMB_SIZE = 256;
@@ -119,6 +131,15 @@ public class MainFragment extends Fragment implements MainContract.View {
 
     public void showPictureChoose() {
         Gallery.init(getActivity().getApplication());
+        Configs.setEditImage(false);
+        Configs.addMedia(Configs.MEDIA_PICTURE);
+        Configs.THUMB_SIZE = 256;
+        PickerActivity.openActivity(getActivity(), 12);
+    }
+
+    public void showPictureEditChoose() {
+        Gallery.init(getActivity().getApplication());
+        Configs.setEditImage(true);
         Configs.addMedia(Configs.MEDIA_PICTURE);
         Configs.THUMB_SIZE = 256;
         PickerActivity.openActivity(getActivity(), 12);
@@ -128,6 +149,16 @@ public class MainFragment extends Fragment implements MainContract.View {
     public void showVideoChoose() {
         Gallery.init(getActivity().getApplication());
         Configs.addMedia(Configs.MEDIA_MOVIE);
+        Configs.setPreviewVideo(false);
+        Configs.THUMB_SIZE = 256;
+        PickerActivity.openActivity(getActivity(), 12);
+    }
+
+
+    public void showVideoPreviewChoose() {
+        Gallery.init(getActivity().getApplication());
+        Configs.addMedia(Configs.MEDIA_MOVIE);
+        Configs.setPreviewVideo(true);
         Configs.THUMB_SIZE = 256;
         PickerActivity.openActivity(getActivity(), 12);
     }
@@ -135,11 +166,30 @@ public class MainFragment extends Fragment implements MainContract.View {
     @Override
     public void showMultiChoose() {
         Gallery.init(getActivity().getApplication());
-        Configs.addMedia(Configs.MEDIA_MOVIE);
+//        Configs.addMedia(Configs.MEDIA_MOVIE);
         Configs.addMedia(Configs.MEDIA_PICTURE);
         Configs.THUMB_SIZE = 256;
+        Configs.setEditImage(false);
+        Configs.setPreviewVideo(true);
+        setMultiChoose(true);
+//        setMultiChoose(false);
+
         PickerActivity.openActivity(getActivity(), 12);
     }
+
+    public void showMultiVideoChoose() {
+        Gallery.init(getActivity().getApplication());
+//        Configs.addMedia(Configs.MEDIA_MOVIE);
+        Configs.addMedia(Configs.MEDIA_MOVIE);
+        Configs.THUMB_SIZE = 256;
+        Configs.setEditImage(false);
+        Configs.setPreviewVideo(true);
+        setMultiChoose(true);
+//        setMultiChoose(false);
+
+        PickerActivity.openActivity(getActivity(), 12);
+    }
+
 
     @Override
     public void showChooseImage(boolean isVideo, Uri uri) {

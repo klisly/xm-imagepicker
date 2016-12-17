@@ -20,6 +20,9 @@ public class MediasLogic {
     private ArrayList<MediaController.AlbumEntry> videoAlbums = new ArrayList<>();
     private HashMap<Integer, MediaController.PhotoEntry> selectedPhotos = new HashMap<>();
     private boolean loading = false;
+
+    private ArrayList<MediaController.PhotoEntry> choosePictures = new ArrayList<>();
+    private ArrayList<MediaController.PhotoEntry> chooseVideos = new ArrayList<>();
     private HashMap<Object, MediaListener> listeners = new HashMap<>();
     public static MediasLogic getInstance() {
         return ourInstance;
@@ -138,6 +141,8 @@ public class MediasLogic {
         mediaType = Configs.MEDIA_PICTURE;
         pictueAlbumIndex = 0;
         videoAlbumIndex = 0;
+        choosePictures.clear();
+        chooseVideos.clear();
     }
 
     public int getChoosePosition() {
@@ -163,5 +168,50 @@ public class MediasLogic {
         this.mediaType = mediaType;
         Log.i("MediasLogic", "updateMediaType mediaType:"+mediaType);
         notify(Configs.NOTIFY_TYPE_DIRECTORY);
+    }
+
+    public boolean isChoosed(final MediaController.PhotoEntry entry){
+        int length = choosePictures.size();
+        for(int i = 0; i < length; i++){
+            if(choosePictures.get(i).path != null && entry.path != null && choosePictures.get(i).path.equals(entry.path)){
+                return true;
+            }
+        }
+        length = chooseVideos.size();
+        for(int i = 0; i < length; i++){
+            if(chooseVideos.get(i).path != null && entry.path != null && chooseVideos.get(i).path.equals(entry.path)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void chooseMedia(final MediaController.PhotoEntry entry){
+        if(!entry.isVideo){
+            choosePictures.add(entry);
+        } else {
+            chooseVideos.add(entry);
+        }
+
+    }
+
+    public void unChooseMedia(final MediaController.PhotoEntry entry){
+        int length = choosePictures.size();
+        if(!entry.isVideo){
+            for(int i = 0; i < length; i++){
+                if(choosePictures.get(i).equals(entry)){
+                    choosePictures.remove(i);
+                    return;
+                }
+            }
+        } else {
+            length = chooseVideos.size();
+            for(int i = 0; i < length; i++){
+                if(chooseVideos.get(i).equals(entry)){
+                    chooseVideos.remove(i);
+                    return;
+                }
+            }
+        }
     }
 }

@@ -51,7 +51,6 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         Gallery.init(getApplication());
         initToolBar();
         getWindowManager().getDefaultDisplay().getSize(point);
-        Log.i("PickerActivity","Size:"+point);
         mTvChooseName = (TextView) findViewById(R.id.tv_dir);
         mTvChooseName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +76,6 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
                 hideDir();
                 MediasLogic.getInstance().setChooIndex(entry.isVideo, position);
                 String name = entry.bucketName;
-                Log.i("PickerActivity", "choose album name:"+name);
                 mTvChooseName.setText(name);
             }
         });
@@ -294,7 +292,6 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             albumAdapter.setAlbums(MediasLogic.getInstance().getChooseAlbum());
             albumAdapter.notifyDataSetChanged();
             String name = MediasLogic.getInstance().getChooseAlbumName();
-            Log.i("PickerActivity", "choose album name:"+name);
             mTvChooseName.setText(name);
         }
     }
@@ -302,6 +299,5 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.i("PickerActivity","onConfigurationChanged");
     }
 }

@@ -28,8 +28,10 @@ dependencies {
     })
     compile 'com.zhy:percent-support-extends:1.1.1'
     compile group: 'com.squareup.picasso', name: 'picasso', version: '2.5.2'
+    // https://mvnrepository.com/artifact/com.github.chrisbanes.photoview/library
+    compile group: 'com.github.chrisbanes.photoview', name: 'library', version: '1.2.4'
     compile "com.android.support:appcompat-v7:25.0.0"
-    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:design:25.0.0'
     testCompile 'junit:junit:4.12'
     compile project(':swipebackhelper')
 }

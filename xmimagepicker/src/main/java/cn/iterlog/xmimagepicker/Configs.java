@@ -24,6 +24,10 @@ public class Configs {
 
     private static boolean editImage = true;
     private static boolean previewVideo = true;
+    private static boolean multiChoose = false;
+    private static int imageSize = 1;
+    private static int videoSize = 1;
+
 
     public static boolean isEditImage() {
         return editImage;
@@ -31,6 +35,14 @@ public class Configs {
 
     public static void setEditImage(boolean editImage) {
         Configs.editImage = editImage;
+    }
+
+    public static boolean isMultiChoose() {
+        return multiChoose;
+    }
+
+    public static void setMultiChoose(boolean multiChoose) {
+        Configs.multiChoose = multiChoose;
     }
 
     public static boolean isSingleMedia() { // 小余最大MEDIA_TYPE的值，那么只有一种类型
@@ -78,10 +90,29 @@ public class Configs {
         Configs.previewVideo = previewVideo;
     }
 
+    public static int getVideoSize() {
+        return videoSize;
+    }
+
+    public static void setVideoSize(int videoSize) {
+        Configs.videoSize = videoSize;
+    }
+
+    public static int getImageSize() {
+        return imageSize;
+    }
+
+    public static void setImageSize(int imageSize) {
+        Configs.imageSize = imageSize;
+    }
+
     public static void reset() {
         editImage = true;
         previewVideo = true;
         Configs.types.clear();
         Configs.names.clear();
+        videoSize = 1;
+        imageSize = 1;
+        multiChoose = false;
     }
 }

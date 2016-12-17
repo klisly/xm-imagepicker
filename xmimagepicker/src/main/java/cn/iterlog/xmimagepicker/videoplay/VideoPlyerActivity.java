@@ -29,7 +29,7 @@ import cn.iterlog.xmimagepicker.Utils.AndroidUtilities;
 
 public class VideoPlyerActivity extends BaseActivity implements SurfaceHolder.Callback, MediaPlayer.OnVideoSizeChangedListener {
     private static String TAG = VideoPlyerActivity.class.getSimpleName();
-    public static final int REQUEST_PICK = 5098;
+    public static final int REQUEST_PICK = 60010;
     public static final String TYPE_PICK = "TYPE_PICK";
     public static final String TYPE_PREVIEW = "TYPE_PREVIEW";
     public static String PARAM_SRC = "PARAM_SRC";
@@ -206,7 +206,7 @@ public class VideoPlyerActivity extends BaseActivity implements SurfaceHolder.Ca
         preview.setAlpha(0.2f);
         preview.animate()
                 .alpha(1f)
-                .setDuration(300)
+                .setDuration(600)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {

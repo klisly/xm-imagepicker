@@ -70,42 +70,61 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
         } else {
             mProgressBar.setVisibility(View.VISIBLE);
         }
-        mAdapter.setListener(new MediaAdapter.OnItemChangeListener() {
+
+
+        mAdapter.setListener(new MediaAdapter.OnItemChooseListener() {
 
             @Override
-            public void onMediaView(MediaAdapter.MediaHolder view, int position, MediaController.PhotoEntry photoEntry) {
+            public void onMediaView(int position, MediaController.PhotoEntry photoEntry) {
                 try {
+                    if (Configs.isMultiChoose()) {
+                        // TODO 预览算着的图片或者视频
+                        if (photoEntry.isVideo) {
 
-                    if (photoEntry.isVideo) {
-                        if (Configs.isPreviewVideo()) {
-                            Intent intent = new Intent(getActivity(), VideoPlyerActivity.class);
-                            intent.putExtra(VideoPlyerActivity.PARAM_TYPE, VideoPlyerActivity.TYPE_PICK);
-                            intent.putExtra(VideoPlyerActivity.PARAM_SRC, Uri.fromFile(new File(photoEntry.path)));
-                            getActivity().startActivityForResult(intent, VideoPlyerActivity.REQUEST_PICK);
                         } else {
-                            Intent intent = new Intent();
-                            intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_PICTURE);
-                            Uri uri = Uri.fromFile(new File(photoEntry.path));
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                            getActivity().setResult(RESULT_OK, intent);
-                            getActivity().onBackPressed();
+
                         }
                     } else {
-                        if (Configs.isEditImage()) {
-                            Uri destination = Uri.fromFile(new File(getContext().getCacheDir(), "cropped"));
-                            Uri src = Uri.fromFile(new File(photoEntry.path));
-                            Crop.of(src, destination).asSquare().start(getActivity());
+                        if (photoEntry.isVideo) {
+                            if (Configs.isPreviewVideo()) {
+                                Intent intent = new Intent(getActivity(), VideoPlyerActivity.class);
+                                intent.putExtra(VideoPlyerActivity.PARAM_TYPE, VideoPlyerActivity.TYPE_PICK);
+                                intent.putExtra(VideoPlyerActivity.PARAM_SRC, Uri.fromFile(new File(photoEntry.path)));
+                                getActivity().startActivityForResult(intent, VideoPlyerActivity.REQUEST_PICK);
+                            } else {
+                                Intent intent = new Intent();
+                                Uri uri = Uri.fromFile(new File(photoEntry.path));
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                                intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_MOVIE);
+                                getActivity().setResult(RESULT_OK, intent);
+                                getActivity().onBackPressed();
+                            }
                         } else {
-                            Intent intent = new Intent();
-                            intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_PICTURE);
-                            Uri uri = Uri.fromFile(new File(photoEntry.path));
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                            getActivity().setResult(RESULT_OK, intent);
-                            getActivity().onBackPressed();
+                            if (Configs.isEditImage()) {
+                                Uri destination = Uri.fromFile(new File(getContext().getCacheDir(), "cropped"));
+                                Uri src = Uri.fromFile(new File(photoEntry.path));
+                                Crop.of(src, destination).asSquare().start(getActivity());
+                            } else {
+                                Intent intent = new Intent();
+                                intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_PICTURE);
+                                Uri uri = Uri.fromFile(new File(photoEntry.path));
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                                getActivity().setResult(RESULT_OK, intent);
+                                getActivity().onBackPressed();
+                            }
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onMediaChoose(int position, MediaController.PhotoEntry photoEntry, boolean isChecked) {
+                if(isChecked){
+                    MediasLogic.getInstance().chooseMedia(photoEntry);
+                } else {
+                    MediasLogic.getInstance().unChooseMedia(photoEntry);
                 }
             }
         });
