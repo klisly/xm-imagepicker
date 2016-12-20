@@ -27,9 +27,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.zhy:percent-support-extends:1.1.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    // https://mvnrepository.com/artifact/com.github.chrisbanes.photoview/library
-//    compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:design:25.0.0'
     testCompile 'junit:junit:4.12'

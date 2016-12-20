@@ -6,7 +6,7 @@
     android:clickable="true"
     >
 
-    <ImageView
+    <cn.iterlog.xmimagepicker.widget.BackupImageView
         android:id="@+id/iv_thumbnail"
         android:layout_width="48dp"
         android:layout_height="48dp"

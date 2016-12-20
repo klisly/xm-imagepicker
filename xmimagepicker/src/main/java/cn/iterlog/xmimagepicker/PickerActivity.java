@@ -316,6 +316,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         MediasLogic.getInstance().clearData();
         Configs.getInstance().reset();
         MediaController.getInstance().cleanup();
+        Gallery.clean();
         super.onDestroy();
     }
 
