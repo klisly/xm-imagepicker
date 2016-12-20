@@ -12,8 +12,6 @@ import java.security.SecureRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.iterlog.xmimagepicker.DispatchQueue;
-
 public class Utilities {
 
     public static Pattern pattern = Pattern.compile("[\\-0-9]+");

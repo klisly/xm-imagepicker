@@ -1,4 +1,4 @@
-package cn.iterlog.xmimagepicker;
+package cn.iterlog.xmimagepicker.Utils;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -9,7 +9,7 @@ import java.util.concurrent.CountDownLatch;
 public class DispatchQueue extends Thread {
 
     private volatile Handler handler = null;
-    private CountDownLatch syncLatch = new CountDownLatch(1);
+    private CountDownLatch syncLatch = new CountDownLatch(1); // 通过CountDownLatch来实现线程的同步
 
     public DispatchQueue(final String threadName) {
         setName(threadName);

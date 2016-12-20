@@ -1,4 +1,4 @@
-package cn.iterlog.xmimagepicker;
+package cn.iterlog.xmimagepicker.Utils;
 
 import android.graphics.drawable.BitmapDrawable;
 

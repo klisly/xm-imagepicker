@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 
-import cn.iterlog.xmimagepicker.DispatchQueue;
 import cn.iterlog.xmimagepicker.TL.Document;
 import cn.iterlog.xmimagepicker.TL.DocumentAttribute;
 import cn.iterlog.xmimagepicker.TL.FileLocation;

@@ -1041,7 +1041,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         if (photoEntry.isVideo) {
                             path = "vthumb://" + photoEntry.imageId + ":" + photoEntry.path;
                         } else {
-                            path = "thumb://" + photoEntry.imageId + ":" + photoEntry.path;
+                            path = photoEntry.path;
                         }
                     }
                     filter = String.format(Locale.US, "%d_%d", size, size);

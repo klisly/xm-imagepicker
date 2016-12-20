@@ -36,10 +36,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cn.iterlog.xmimagepicker.widget.AnimatedFileDrawable;
-import cn.iterlog.xmimagepicker.DispatchQueue;
 import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.ImageReceiver;
-import cn.iterlog.xmimagepicker.LruCache;
 import cn.iterlog.xmimagepicker.TL.Document;
 import cn.iterlog.xmimagepicker.TL.FileLocation;
 import cn.iterlog.xmimagepicker.TL.PhotoSize;
