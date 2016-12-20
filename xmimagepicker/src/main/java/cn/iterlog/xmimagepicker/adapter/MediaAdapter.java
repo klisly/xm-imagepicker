@@ -93,14 +93,14 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder>
                 public void onCheckedChanged(RippleChoiceView view, boolean isChecked) {
 
                     if (isChecked) {
-                        if (Configs.isSimpleType()) {
+                        if (Configs.getInstance().isSimpleType()) {
                             if ((mMedias.get(position).isVideo && MediasLogic.getInstance().getChoosePictures().size() > 0)
                                     || (!mMedias.get(position).isVideo && MediasLogic.getInstance().getChooseVideos().size() > 0)) {
                                 StringBuilder builder = new StringBuilder();
                                 builder.append("只能选择")
-                                        .append(Configs.getImageSize())
+                                        .append(Configs.getInstance().getImageSize())
                                         .append("张图片或者")
-                                        .append(Configs.getVideoSize())
+                                        .append(Configs.getInstance().getVideoSize())
                                         .append("条视频");
                                 AndroidUtilities.showToast(builder.toString());
                                 holder.mRcv.setmChecked(false);
@@ -109,20 +109,20 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder>
                         }
 
                         if (mMedias.get(position).isVideo
-                                && MediasLogic.getInstance().getChooseVideos().size() >= Configs.getVideoSize()) {
+                                && MediasLogic.getInstance().getChooseVideos().size() >= Configs.getInstance().getVideoSize()) {
                             StringBuilder builder = new StringBuilder();
                             builder.append("只能选择")
-                                    .append(Configs.getVideoSize())
+                                    .append(Configs.getInstance().getVideoSize())
                                     .append("条视频");
                             AndroidUtilities.showToast(builder.toString());
                             holder.mRcv.setmChecked(false);
                             return;
                         }
                         if (!mMedias.get(position).isVideo
-                                && MediasLogic.getInstance().getChoosePictures().size() >= Configs.getImageSize()) {
+                                && MediasLogic.getInstance().getChoosePictures().size() >= Configs.getInstance().getImageSize()) {
                             StringBuilder builder = new StringBuilder();
                             builder.append("只能选择")
-                                    .append(Configs.getImageSize())
+                                    .append(Configs.getInstance().getImageSize())
                                     .append("张图片");
                             AndroidUtilities.showToast(builder.toString());
                             holder.mRcv.setmChecked(false);
@@ -181,7 +181,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder>
             mPortraitView = (BackupImageView) itemView.findViewById(R.id.iv_portrait);
             mVideoTag = (ImageView) itemView.findViewById(R.id.iv_video_tag);
             mRcv = (RippleChoiceView) itemView.findViewById(R.id.rcv_choice);
-            if (Configs.isMultiChoose()) {
+            if (Configs.getInstance().isMultiChoose()) {
                 mRcv.setVisibility(View.VISIBLE);
             } else {
                 mRcv.setVisibility(View.GONE);

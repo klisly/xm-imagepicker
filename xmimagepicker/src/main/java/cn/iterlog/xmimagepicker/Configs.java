@@ -1,9 +1,14 @@
 package cn.iterlog.xmimagepicker;
 
+import android.content.Context;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Configs {
+import cn.iterlog.xmimagepicker.data.MediasLogic;
+
+public class Configs implements Serializable {
     public static final String SINGLE_PHOTO = "SINGLE_PHOTO";
     public static final String LIMIT_PICK_PHOTO = "LIMIT_PICK_PHOTO";
     public static final String HAS_CAMERA = "HAS_CAMERA";
@@ -38,103 +43,134 @@ public class Configs {
 
     public static int THUMB_SIZE = 512;
 
-    private static boolean editImage = true;
-    private static boolean previewVideo = true;
-    private static boolean multiChoose = false;
-    private static int imageSize = 6;
-    private static int videoSize = 1;
-    private static boolean simpleType = false;
+    private boolean editImage = true;
+    private boolean previewVideo = true;
+    private boolean multiChoose = false;
+    private int imageSize = 6;
+    private int videoSize = 1;
+    private boolean simpleType = false;
+    private static Configs instance;
+    private Context context;
+    public static Configs getInstance() {
+        if(Gallery.applicationContext == null){
+            throw new NullPointerException("Gallery.applicationContext not init");
+        }
+        return getInstance(Gallery.applicationContext);
+    }
+    public static Configs getInstance(Context context) {
+        if (instance == null) {
+            synchronized (MediasLogic.class) {
+                if (instance == null) {
+                    instance = new Configs();
+                    instance.setContext(context);
+                }
+            }
+        }
+        return instance;
+    }
 
-    public static boolean isEditImage() {
+    public Configs() {
+
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public boolean isEditImage() {
         return editImage;
     }
 
-    public static void setEditImage(boolean editImage) {
-        Configs.editImage = editImage;
+    public void setEditImage(boolean editImage) {
+        this.editImage = editImage;
     }
 
-    public static boolean isMultiChoose() {
+    public boolean isMultiChoose() {
         return multiChoose;
     }
 
-    public static void setMultiChoose(boolean multiChoose) {
-        Configs.multiChoose = multiChoose;
+    public void setMultiChoose(boolean multiChoose) {
+        this.multiChoose = multiChoose;
     }
 
-    public static boolean isSingleMedia() { // 小余最大MEDIA_TYPE的值，那么只有一种类型
+    public boolean isSingleMedia() { // 小余最大MEDIA_TYPE的值，那么只有一种类型
         if (types.size() <= 1) {
             return true;
         }
         return false;
     }
 
-    private static List<String> names = new ArrayList<>();
+    private List<String> names = new ArrayList<>();
 
-    public static List<String> getNames() {
+    public List<String> getNames() {
         return names;
     }
 
-    private static List<Integer> types = new ArrayList<>();
+    private List<Integer> types = new ArrayList<>();
 
-    public static List<Integer> getMedias() {
+    public List<Integer> getMedias() {
         return types;
     }
 
-    public static void addMedia(int type) {
+    public void addMedia(int type) {
 
         if (type == MEDIA_PICTURE) {
             types.add(MEDIA_PICTURE);
-            names.add(Gallery.applicationContext.getString(R.string.picture));
+            names.add(context.getString(R.string.picture));
 
         } else if (type == MEDIA_MOVIE) {
             types.add(MEDIA_MOVIE);
-            names.add(Gallery.applicationContext.getString(R.string.video));
+            names.add(context.getString(R.string.video));
         } else if (type == MEDIA_DOCUMENT) {
             types.add(MEDIA_DOCUMENT);
-            names.add(Gallery.applicationContext.getString(R.string.document));
+            names.add(context.getString(R.string.document));
         } else if (type == MEDIA_MUSIC) {
             types.add(MEDIA_MUSIC);
-            names.add(Gallery.applicationContext.getString(R.string.music));
+            names.add(context.getString(R.string.music));
         }
     }
 
-    public static boolean isPreviewVideo() {
+    public boolean isPreviewVideo() {
         return previewVideo;
     }
 
-    public static void setPreviewVideo(boolean previewVideo) {
-        Configs.previewVideo = previewVideo;
+    public void setPreviewVideo(boolean previewVideo) {
+        this.previewVideo = previewVideo;
     }
 
-    public static int getVideoSize() {
+    public int getVideoSize() {
         return videoSize;
     }
 
-    public static void setVideoSize(int videoSize) {
-        Configs.videoSize = videoSize;
+    public void setVideoSize(int videoSize) {
+        this.videoSize = videoSize;
     }
 
-    public static int getImageSize() {
+    public int getImageSize() {
         return imageSize;
     }
 
-    public static void setImageSize(int imageSize) {
-        Configs.imageSize = imageSize;
+    public void setImageSize(int imageSize) {
+        this.imageSize = imageSize;
     }
 
-    public static boolean isSimpleType() {
+    public boolean isSimpleType() {
         return simpleType;
     }
 
-    public static void setSimpleType(boolean simpleType) {
-        Configs.simpleType = simpleType;
+    public void setSimpleType(boolean simpleType) {
+        this.simpleType = simpleType;
     }
 
-    public static void reset() {
+    public void reset() {
         editImage = true;
         previewVideo = true;
-        Configs.types.clear();
-        Configs.names.clear();
+        types.clear();
+        names.clear();
         multiChoose = false;
         videoSize = 1;
         imageSize = 1;

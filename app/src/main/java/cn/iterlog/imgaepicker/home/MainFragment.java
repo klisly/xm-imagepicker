@@ -34,7 +34,6 @@ import cn.iterlog.xmimagepicker.Configs;
 import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.PickerActivity;
 
-import static cn.iterlog.xmimagepicker.Configs.setMultiChoose;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -133,57 +132,57 @@ public class MainFragment extends Fragment implements MainContract.View {
 
     @Override
     public void showSingleChoose() {
-        Gallery.init(getActivity().getApplication());
-        Configs.setEditImage(false);
-        Configs.addMedia(Configs.MEDIA_MOVIE);
-        Configs.addMedia(Configs.MEDIA_PICTURE);
-        Configs.THUMB_SIZE = 256;
+        
+         Configs.getInstance(getActivity().getApplicationContext()).setEditImage(false);
+         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_MOVIE);
+         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_PICTURE);
+         Configs.getInstance(getActivity().getApplicationContext()).THUMB_SIZE = 256;
         PickerActivity.openActivity(getActivity(), 12);
     }
 
     public void showPictureChoose() {
         Gallery.init(getActivity().getApplication());
-        Configs.setEditImage(false);
-        Configs.addMedia(Configs.MEDIA_PICTURE);
-        Configs.THUMB_SIZE = 256;
+         Configs.getInstance(getActivity().getApplicationContext()).setEditImage(false);
+         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_PICTURE);
+         Configs.getInstance(getActivity().getApplicationContext()).THUMB_SIZE = 256;
         PickerActivity.openActivity(getActivity(), 12);
     }
 
     public void showPictureEditChoose() {
         Gallery.init(getActivity().getApplication());
-        Configs.setEditImage(true);
-        Configs.addMedia(Configs.MEDIA_PICTURE);
-        Configs.THUMB_SIZE = 256;
+         Configs.getInstance(getActivity().getApplicationContext()).setEditImage(true);
+         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_PICTURE);
+         Configs.getInstance(getActivity().getApplicationContext()).THUMB_SIZE = 256;
         PickerActivity.openActivity(getActivity(), 12);
     }
 
 
     public void showVideoChoose() {
         Gallery.init(getActivity().getApplication());
-        Configs.addMedia(Configs.MEDIA_MOVIE);
-        Configs.setPreviewVideo(false);
-        Configs.THUMB_SIZE = 256;
+         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_MOVIE);
+         Configs.getInstance(getActivity().getApplicationContext()).setPreviewVideo(false);
+         Configs.getInstance(getActivity().getApplicationContext()).THUMB_SIZE = 256;
         PickerActivity.openActivity(getActivity(), 12);
     }
 
 
     public void showVideoPreviewChoose() {
         Gallery.init(getActivity().getApplication());
-        Configs.addMedia(Configs.MEDIA_MOVIE);
-        Configs.setPreviewVideo(true);
-        Configs.THUMB_SIZE = 256;
+         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_MOVIE);
+         Configs.getInstance(getActivity().getApplicationContext()).setPreviewVideo(true);
+         Configs.getInstance(getActivity().getApplicationContext()).THUMB_SIZE = 256;
         PickerActivity.openActivity(getActivity(), 12);
     }
 
     @Override
     public void showMultiChoose() {
-        Gallery.init(getActivity().getApplication());
-//        Configs.addMedia(Configs.MEDIA_MOVIE);
-        Configs.addMedia(Configs.MEDIA_PICTURE);
-        Configs.THUMB_SIZE = 256;
-        Configs.setEditImage(false);
-        Configs.setPreviewVideo(true);
-        setMultiChoose(true);
+        
+//         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_MOVIE);
+        Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_PICTURE);
+         Configs.getInstance(getActivity().getApplicationContext()).THUMB_SIZE = 256;
+         Configs.getInstance(getActivity().getApplicationContext()).setEditImage(false);
+         Configs.getInstance(getActivity().getApplicationContext()).setPreviewVideo(true);
+         Configs.getInstance(getActivity().getApplicationContext()).setMultiChoose(true);
 //        setMultiChoose(false);
 
         PickerActivity.openActivity(getActivity(), 12);
@@ -191,40 +190,40 @@ public class MainFragment extends Fragment implements MainContract.View {
 
     public void showMultiVideoChoose() {
         Gallery.init(getActivity().getApplication());
-//        Configs.addMedia(Configs.MEDIA_MOVIE);
-        Configs.addMedia(Configs.MEDIA_MOVIE);
-        Configs.THUMB_SIZE = 256;
-        Configs.setEditImage(false);
-        Configs.setPreviewVideo(true);
-        setMultiChoose(true);
+//         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_MOVIE);
+         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_MOVIE);
+         Configs.getInstance(getActivity().getApplicationContext()).THUMB_SIZE = 256;
+         Configs.getInstance(getActivity().getApplicationContext()).setEditImage(false);
+         Configs.getInstance(getActivity().getApplicationContext()).setPreviewVideo(true);
+         Configs.getInstance(getActivity().getApplicationContext()).setMultiChoose(true);
         PickerActivity.openActivity(getActivity(), 12);
     }
 
     public void showMultiVideoPictureChoose() {
         Gallery.init(getActivity().getApplication());
-        Configs.addMedia(Configs.MEDIA_PICTURE);
-        Configs.addMedia(Configs.MEDIA_MOVIE);
-        Configs.THUMB_SIZE = 256;
-        Configs.setEditImage(false);
-        Configs.setPreviewVideo(true);
-        Configs.setImageSize(6);
-        Configs.setVideoSize(2);
-        Configs.setSimpleType(true);
-        setMultiChoose(true);
+         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_PICTURE);
+         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_MOVIE);
+         Configs.getInstance(getActivity().getApplicationContext()).THUMB_SIZE = 256;
+         Configs.getInstance(getActivity().getApplicationContext()).setEditImage(false);
+         Configs.getInstance(getActivity().getApplicationContext()).setPreviewVideo(true);
+         Configs.getInstance(getActivity().getApplicationContext()).setImageSize(6);
+         Configs.getInstance(getActivity().getApplicationContext()).setVideoSize(2);
+         Configs.getInstance(getActivity().getApplicationContext()).setSimpleType(true);
+         Configs.getInstance(getActivity().getApplicationContext()).setMultiChoose(true);
         PickerActivity.openActivity(getActivity(), 12);
     }
 
     public void showMultiVpChoose() {
         Gallery.init(getActivity().getApplication());
-        Configs.addMedia(Configs.MEDIA_PICTURE);
-        Configs.addMedia(Configs.MEDIA_MOVIE);
-        Configs.THUMB_SIZE = 256;
-        Configs.setEditImage(false);
-        Configs.setPreviewVideo(true);
-        Configs.setImageSize(6);
-        Configs.setVideoSize(2);
-        Configs.setSimpleType(false);
-        setMultiChoose(true);
+         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_PICTURE);
+         Configs.getInstance(getActivity().getApplicationContext()).addMedia( Configs.getInstance(getActivity().getApplicationContext()).MEDIA_MOVIE);
+         Configs.getInstance(getActivity().getApplicationContext()).THUMB_SIZE = 256;
+         Configs.getInstance(getActivity().getApplicationContext()).setEditImage(false);
+         Configs.getInstance(getActivity().getApplicationContext()).setPreviewVideo(true);
+         Configs.getInstance(getActivity().getApplicationContext()).setImageSize(6);
+         Configs.getInstance(getActivity().getApplicationContext()).setVideoSize(2);
+         Configs.getInstance(getActivity().getApplicationContext()).setSimpleType(false);
+         Configs.getInstance(getActivity().getApplicationContext()).setMultiChoose(true);
         PickerActivity.openActivity(getActivity(), 12);
     }
 

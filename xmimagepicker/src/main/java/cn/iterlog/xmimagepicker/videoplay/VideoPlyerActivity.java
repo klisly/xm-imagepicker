@@ -200,10 +200,10 @@ public class VideoPlyerActivity extends BaseActivity implements SurfaceHolder.Ca
             return;
         }
         preview.setVisibility(View.VISIBLE);
-        preview.setAlpha(0.2f);
+        preview.setAlpha(0.5f);
         preview.animate()
                 .alpha(1f)
-                .setDuration(600)
+                .setDuration(300)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
@@ -227,7 +227,7 @@ public class VideoPlyerActivity extends BaseActivity implements SurfaceHolder.Ca
                 })
                 .start();
         playButton.setVisibility(View.VISIBLE);
-        playButton.setAlpha(0.2f);
+        playButton.setAlpha(0.8f);
         playButton.animate()
                 .alpha(1f)
                 .setDuration(300)
@@ -262,7 +262,7 @@ public class VideoPlyerActivity extends BaseActivity implements SurfaceHolder.Ca
 
     private void onstartPlay() {
         preview.animate()
-                .alpha(0.9f)
+                .alpha(1f)
                 .setDuration(200)
                 .setListener(new Animator.AnimatorListener() {
                     @Override

@@ -15,16 +15,16 @@ public class MediaFagmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return MediaFragment.newInstance(Configs.getMedias().get(position));
+        return MediaFragment.newInstance(Configs.getInstance().getMedias().get(position));
     }
 
     @Override
     public int getCount() {
-        return Configs.getMedias().size();
+        return Configs.getInstance().getMedias().size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return Configs.getNames().get(position);
+        return Configs.getInstance().getInstance().getNames().get(position);
     }
 }

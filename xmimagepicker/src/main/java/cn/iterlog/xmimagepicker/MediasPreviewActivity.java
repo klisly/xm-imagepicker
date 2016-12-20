@@ -573,14 +573,14 @@ public class MediasPreviewActivity extends AppCompatActivity implements SurfaceH
             public void onCheckedChanged(RippleChoiceView view, boolean isChecked) {
 
                 if (isChecked) {
-                    if (Configs.isSimpleType()) {
+                    if (Configs.getInstance().isSimpleType()) {
                         if ((datas.get(curPos).isVideo && MediasLogic.getInstance().getChoosePictures().size() > 0)
                                 || datas.get(curPos).isVideo && MediasLogic.getInstance().getChooseVideos().size() > 0) {
                             StringBuilder builder = new StringBuilder();
                             builder.append("只能选择")
-                                    .append(Configs.getImageSize())
+                                    .append(Configs.getInstance().getImageSize())
                                     .append("张图片或者")
-                                    .append(Configs.getVideoSize())
+                                    .append(Configs.getInstance().getVideoSize())
                                     .append("条视频");
                             AndroidUtilities.showToast(builder.toString());
                             mRcvItemChoose.setmChecked(false);
@@ -589,20 +589,20 @@ public class MediasPreviewActivity extends AppCompatActivity implements SurfaceH
                     }
 
                     if (datas.get(curPos).isVideo
-                            && MediasLogic.getInstance().getChooseVideos().size() >= Configs.getVideoSize()) {
+                            && MediasLogic.getInstance().getChooseVideos().size() >= Configs.getInstance().getVideoSize()) {
                         StringBuilder builder = new StringBuilder();
                         builder.append("只能选择")
-                                .append(Configs.getVideoSize())
+                                .append(Configs.getInstance().getVideoSize())
                                 .append("条视频");
                         AndroidUtilities.showToast(builder.toString());
                         mRcvItemChoose.setmChecked(false);
                         return;
                     }
                     if (!datas.get(curPos).isVideo
-                            && MediasLogic.getInstance().getChoosePictures().size() >= Configs.getImageSize()) {
+                            && MediasLogic.getInstance().getChoosePictures().size() >= Configs.getInstance().getImageSize()) {
                         StringBuilder builder = new StringBuilder();
                         builder.append("只能选择")
-                                .append(Configs.getImageSize())
+                                .append(Configs.getInstance().getImageSize())
                                 .append("张图片");
                         AndroidUtilities.showToast(builder.toString());
                         mRcvItemChoose.setmChecked(false);

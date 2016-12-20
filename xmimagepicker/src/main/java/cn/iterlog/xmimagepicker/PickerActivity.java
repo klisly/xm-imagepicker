@@ -64,18 +64,19 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
 
         mRcvNumber = (RippleChoiceView) findViewById(R.id.rcv_choice);
         mTvChoose = (TextView) findViewById(R.id.choose);
-        if (Configs.isMultiChoose()) {
+        if (Configs.getInstance().isMultiChoose()) {
             mTvChoose.setVisibility(View.VISIBLE);
             mTvChoose.setTextColor(getResources().getColor(R.color.white_50));
         }
 
         initListener();
 
-        MediasLogic.getInstance().updateMediaType(Configs.getMedias().get(0));
+        MediasLogic.getInstance().updateMediaType(Configs.getInstance().getMedias().get(0));
         initViewPager();
         initAlbumData();
         loadMediaData();
         MediasLogic.getInstance().registerListener(this, this);
+
 
     }
 
@@ -89,7 +90,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         mTvChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               onMultiChoose();
+                onMultiChoose();
             }
         });
         mTvPreview.setOnClickListener(new View.OnClickListener() {
@@ -97,9 +98,9 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             public void onClick(View v) {
                 Intent intent = new Intent(PickerActivity.this, MediasPreviewActivity.class);
                 intent.putExtra(Configs.PREVIEW_POS, 0);
-                if(MediasLogic.getInstance().getMediaType() == Configs.MEDIA_MOVIE){
+                if (MediasLogic.getInstance().getMediaType() == Configs.MEDIA_MOVIE) {
                     intent.putExtra(Configs.PREVIEW_TYPE, Configs.PREVIEW_TYPE_VIDEO);
-                } else if(MediasLogic.getInstance().getMediaType() == Configs.MEDIA_PICTURE){
+                } else if (MediasLogic.getInstance().getMediaType() == Configs.MEDIA_PICTURE) {
                     intent.putExtra(Configs.PREVIEW_TYPE, Configs.PREVIEW_TYPE_PICTURE);
                 }
                 startActivityForResult(intent, Configs.REQUEST_MULTI_PICK);
@@ -185,7 +186,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
 
             @Override
             public void onPageSelected(int position) {
-                MediasLogic.getInstance().updateMediaType(Configs.getMedias().get(position));
+                MediasLogic.getInstance().updateMediaType(Configs.getInstance().getMedias().get(position));
                 hideDir();
             }
 
@@ -195,9 +196,9 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             }
         });
         mTabLayout.setupWithViewPager(mViewPager);
-        if (Configs.isSingleMedia()) {
+        if (Configs.getInstance().isSingleMedia()) {
             mTabLayout.setVisibility(View.GONE);
-            toolbar.setTitle(Configs.getNames().get(0));
+            toolbar.setTitle(Configs.getInstance().getNames().get(0));
         }
     }
 
@@ -313,7 +314,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         NotificationCenter.getInstance().removeObserver(this, NotificationCenter.albumsDidLoaded);
         MediasLogic.getInstance().unRegisterListener(this);
         MediasLogic.getInstance().clearData();
-        Configs.reset();
+        Configs.getInstance().reset();
         MediaController.getInstance().cleanup();
         super.onDestroy();
     }
@@ -341,7 +342,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
                 data.putExtra("type", Configs.MEDIA_MOVIE);
                 setResult(RESULT_OK, data);
                 finish();
-            } else if(requestCode == Configs.REQUEST_MULTI_PICK){
+            } else if (requestCode == Configs.REQUEST_MULTI_PICK) {
                 onMultiChoose();
             }
         }
@@ -372,7 +373,10 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             int count = MediasLogic.getInstance().getChooseCount();
             if (count > 0) {
                 if (mRcvNumber.getVisibility() != View.VISIBLE) {
-                    mTvPreview.setVisibility(View.VISIBLE);
+                    // TODO 暂时只支持图片的预览
+                    if (MediasLogic.getInstance().getMediaType() == Configs.MEDIA_PICTURE) {
+                        mTvPreview.setVisibility(View.VISIBLE);
+                    }
                     mRcvNumber.setVisibility(View.VISIBLE);
                     mRcvNumber.setScaleX(0f);
                     mRcvNumber.setScaleX(0f);

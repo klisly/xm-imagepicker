@@ -76,7 +76,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
             public void onMediaView(int position, MediaController.PhotoEntry photoEntry) {
                 try {
 
-                    if (Configs.isMultiChoose()) {
+                    if (Configs.getInstance().isMultiChoose()) {
                         if (photoEntry.isVideo) {
                             Intent intent = new Intent(getActivity(), VideoPlyerActivity.class);
                             intent.putExtra(VideoPlyerActivity.PARAM_TYPE, VideoPlyerActivity.TYPE_PREVIEW);
@@ -91,7 +91,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
                         }
                     } else {
                         if (photoEntry.isVideo) {
-                            if (Configs.isPreviewVideo()) {
+                            if (Configs.getInstance().isPreviewVideo()) {
                                 Intent intent = new Intent(getActivity(), VideoPlyerActivity.class);
                                 intent.putExtra(VideoPlyerActivity.PARAM_TYPE, VideoPlyerActivity.TYPE_PICK);
                                 intent.putExtra(VideoPlyerActivity.PARAM_SRC, Uri.fromFile(new File(photoEntry.path)));
@@ -105,7 +105,7 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
                                 getActivity().onBackPressed();
                             }
                         } else {
-                            if (Configs.isEditImage()) {
+                            if (Configs.getInstance().isEditImage()) {
                                 Uri destination = Uri.fromFile(new File(getContext().getCacheDir(), "cropped"));
                                 Uri src = Uri.fromFile(new File(photoEntry.path));
                                 Crop.of(src, destination).asSquare().start(getActivity());
