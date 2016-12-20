@@ -37,6 +37,11 @@
             android:name="cn.iterlog.xmimagepicker.videoplay.VideoPlyerActivity">
         </activity>
 
+        <activity
+            android:theme="@style/ImageTheme.NoBack"
+            android:screenOrientation="portrait"
+            android:name="cn.iterlog.xmimagepicker.MediasPreviewActivity">
+        </activity>
 
     </application>
 

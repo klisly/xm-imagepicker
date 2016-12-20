@@ -1,40 +1,32 @@
 package cn.iterlog.xmimagepicker;
 
 import android.animation.Animator;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.List;
 
 import cn.iterlog.xmimagepicker.Utils.AndroidUtilities;
 import cn.iterlog.xmimagepicker.Utils.MediaController;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
-import uk.co.senab.photoview.PhotoViewAttacher;
+import cn.iterlog.xmimagepicker.widget.PhotoViewer;
+import cn.iterlog.xmimagepicker.widget.RippleChoiceView;
 
-public class PicturesPreviewActivity extends AppCompatActivity implements MediasLogic.MediaListener {
+public class MediasPreviewActivity extends AppCompatActivity implements MediasLogic.MediaListener {
     private static int displayType = Configs.PREVIEW_TYPE_PICTURE;
     private int curPos = 0;
-    private PreviewPagerAdapter pagerAdapter;
     private Toolbar toolbar;
-    private List<MediaController.PhotoEntry> datas;
     private TextView mTvChoose;
     private RippleChoiceView mRcvNumber;
     private RippleChoiceView mRcvItemChoose;
-    private ViewPager mViewPager;
-
+    private FrameLayout mViewFrame;
+    private List<MediaController.PhotoEntry> datas;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,19 +35,17 @@ public class PicturesPreviewActivity extends AppCompatActivity implements Medias
         curPos = getIntent().getIntExtra(Configs.PREVIEW_POS, 0);
         mTvChoose = (TextView) findViewById(R.id.choose);
         mRcvNumber = (RippleChoiceView) findViewById(R.id.rcv_choice);
-        mViewPager = (PreviewViewPager) findViewById(R.id.view_pager);
+        mViewFrame = (FrameLayout) findViewById(R.id.view_frame);
         mRcvItemChoose = (RippleChoiceView) findViewById(R.id.rcv_item_choice);
-
         if (displayType == Configs.PREVIEW_TYPE_VIDEO) {
             datas = MediasLogic.getInstance().getChooseVideos();
         } else if (displayType == Configs.PREVIEW_TYPE_PICTURE) {
-            datas = MediasLogic.getInstance().getChoosePictures();
+            datas =  MediasLogic.getInstance().getChoosePictures();
         } else {
-            datas = MediasLogic.getInstance()
+            datas =  MediasLogic.getInstance()
                     .getChooseAlbum().get(MediasLogic.getInstance().getChoosePosition())
                     .photos;
         }
-
         if (MediasLogic.getInstance().getChooseCount() > 0) {
             mRcvNumber.setVisibility(View.VISIBLE);
             updateChooseCount();
@@ -63,40 +53,114 @@ public class PicturesPreviewActivity extends AppCompatActivity implements Medias
             mTvChoose.setTextColor(getResources().getColor(R.color.white_50));
         }
         initToolBar();
-        pagerAdapter = new PreviewPagerAdapter(datas);
-        mViewPager.setAdapter(pagerAdapter);
-        mViewPager.setCurrentItem(curPos);
-
         initListener();
-
         updateChooseStatus();
+        openPreview();
+
+    }
+
+    public void openPreview() {
+        PhotoViewer.getInstance().setParentActivity(this, mViewFrame);
+        PhotoViewer.getInstance().openPhotoForSelect(datas, true, curPos, 0, new CustomProvider(datas));
+        PhotoViewer.getInstance().setChangeListener(new PhotoViewer.OnIndexChangeListener() {
+            @Override
+            public void onIndexChange(int curIndex) {
+                curPos = curIndex;
+                toolbar.setTitle(String.format(title, curPos + 1, datas.size()));
+                updateChooseStatus();
+            }
+        });
+    }
+
+    public static class CustomProvider extends PhotoViewer.PreviewEmptyPhotoViewerProvider {
+        private MediaController.PhotoEntry[] selectArr;
+        private MediaController.PhotoEntry[] removedArr;
+
+        public CustomProvider( List<MediaController.PhotoEntry> selectPhotos) {
+            int size = selectPhotos.size();
+            selectArr = new MediaController.PhotoEntry[size];
+            removedArr = new MediaController.PhotoEntry[size];
+            for (int i = 0; i < size; i++) {
+                selectArr[i] = selectPhotos.get(i);
+            }
+        }
+
+        @Override
+        public boolean isPhotoChecked(int index) {
+            return selectArr[index] != null;
+        }
+
+        @Override
+        public void sendButtonPressed(int index) {
+
+        }
+
+        @Override
+        public int getSelectedCount() {
+            return getRealCount();
+        }
+
+        @Override
+        public boolean checkboxEnable() {
+            return true;
+        }
+
+        @Override
+        public int getCheckeCorner(int index) {
+            return index + 1;
+        }
+
+        @Override
+        public void selectChanged(int index, boolean checked) {
+            MediaController.PhotoEntry photoEntry;
+            if (checked) {
+                selectArr[index] = removedArr[index];
+                photoEntry = removedArr[index];
+                System.arraycopy(removedArr, index, selectArr, index, 1);
+                removedArr[index] = null;
+            } else {
+                removedArr[index] = selectArr[index];
+                photoEntry = selectArr[index];
+                System.arraycopy(selectArr, index, removedArr, index, 1);
+                selectArr[index] = null;
+            }
+        }
+
+        @Override
+        public void previewExit() {
+            super.previewExit();
+        }
+
+        private int getRealCount() {
+            int count = 0;
+            for (int i = 0; i < selectArr.length; i++) {
+                if (selectArr[i] != null) {
+                    count++;
+                }
+            }
+            return count;
+        }
     }
 
     private void initListener() {
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                curPos = position;
-                toolbar.setTitle(String.format(title, position + 1, datas.size()));
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
         MediasLogic.getInstance().registerListener(this, this);
 
         mTvChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(displayType == Configs.PREVIEW_TYPE_VIDEO || displayType == Configs.PREVIEW_TYPE_VIDEO_ALL){
+                    if(MediasLogic.getInstance().getChooseVideos().size() <= 0) {
+                        return;
+                    }
+                }
+                if(displayType == Configs.PREVIEW_TYPE_PICTURE || displayType == Configs.PREVIEW_TYPE_PICTURE_ALL){
+                    if(MediasLogic.getInstance().getChoosePictures().size() <= 0) {
+                        return;
+                    }
+                }
+                setResult(RESULT_OK);
+                finish();
             }
         });
     }
@@ -176,27 +240,10 @@ public class PicturesPreviewActivity extends AppCompatActivity implements Medias
             mTvChoose.setTextColor(getResources().getColor(R.color.white_50));
         }
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                curPos = position;
-                updateChooseStatus();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
         mRcvItemChoose.setOnCheckedChangeListener(new RippleChoiceView.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RippleChoiceView view, boolean isChecked) {
+
                 if (isChecked) {
                     if (Configs.isSimpleType()) {
                         if ((datas.get(curPos).isVideo && MediasLogic.getInstance().getChoosePictures().size() > 0)
@@ -263,53 +310,6 @@ public class PicturesPreviewActivity extends AppCompatActivity implements Medias
         }
     }
 
-
-    static class PreviewPagerAdapter extends PagerAdapter {
-        private List<MediaController.PhotoEntry> datas;
-
-        public PreviewPagerAdapter(List<MediaController.PhotoEntry> datas) {
-            this.datas = datas;
-        }
-
-        @Override
-        public int getCount() {
-            return datas.size();
-        }
-
-        @Override
-        public View instantiateItem(ViewGroup container, final int position) {
-            View view = LayoutInflater.from(Gallery.applicationContext).inflate(R.layout.item_preview, null, false);
-            SurfaceView surfaceView = (SurfaceView) view.findViewById(R.id.sv);
-            ImageView preview = (ImageView) view.findViewById(R.id.preview);
-            ImageView play = (ImageView) view.findViewById(R.id.iv_play);
-            final PhotoViewAttacher photoView = new PhotoViewAttacher(preview);
-            photoView.update();
-            if (datas.get(position).isVideo) {
-                play.setVisibility(View.VISIBLE);
-            } else {
-                play.setVisibility(View.INVISIBLE);
-                Gallery.picasso
-                        .load(Uri.fromFile(new File(datas.get(position).path)))
-                        .placeholder(R.drawable.nophotos)
-                        .error(R.drawable.nophotos)
-                        .into(preview);
-            }
-            container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            return view;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-    }
-
     private void updateChooseStatus() {
         if (MediasLogic.getInstance().isChoosed(datas.get(curPos))) {
             mRcvItemChoose.setmChecked(true);
@@ -318,4 +318,13 @@ public class PicturesPreviewActivity extends AppCompatActivity implements Medias
         }
         updateChooseCount();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        datas = null;
+        MediasLogic.getInstance().unRegisterListener(this);
+        PhotoViewer.getInstance().destroyPhotoViewer();
+    }
+    
 }

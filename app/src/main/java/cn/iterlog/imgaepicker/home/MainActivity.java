@@ -30,7 +30,6 @@ public class MainActivity extends BaseActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     fragment, R.id.contentFrame);
         }
-
         mainPresenter = new MainPresenter(fragment);
     }
 

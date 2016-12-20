@@ -35,6 +35,7 @@ import cn.iterlog.xmimagepicker.adapter.AlbumAdapter;
 import cn.iterlog.xmimagepicker.adapter.MediaFagmentAdapter;
 import cn.iterlog.xmimagepicker.corp.Crop;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
+import cn.iterlog.xmimagepicker.widget.RippleChoiceView;
 
 public class PickerActivity extends BaseActivity implements NotificationCenter.NotificationCenterDelegate, MediasLogic.MediaListener {
 
@@ -88,48 +89,52 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         mTvChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MediasLogic.getInstance().getChooseCount() > 0) {
-                    int vSize = MediasLogic.getInstance().getChooseVideos().size();
-                    int pSize = MediasLogic.getInstance().getChoosePictures().size();
-                    Intent intent = new Intent();
-                    intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_MULTI);
-                    ArrayList<Uri> pictures = new ArrayList<Uri>();
-                    ArrayList<Uri> videos = new ArrayList<Uri>();
-                    for (int i = 0; i < pSize; i++) {
-                        try {
-                            pictures.add(Uri.fromFile(new File(MediasLogic.getInstance().getChoosePictures().get(i).path)));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    for (int i = 0; i < vSize; i++) {
-                        try {
-                            videos.add(Uri.fromFile(new File(MediasLogic.getInstance().getChooseVideos().get(i).path)));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    intent.putParcelableArrayListExtra(Configs.OUT_PUT_VIDEOS, videos);
-                    intent.putParcelableArrayListExtra(Configs.OUT_PUT_IMAGES, pictures);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
+               onMultiChoose();
             }
         });
         mTvPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PickerActivity.this, PicturesPreviewActivity.class);
+                Intent intent = new Intent(PickerActivity.this, MediasPreviewActivity.class);
                 intent.putExtra(Configs.PREVIEW_POS, 0);
                 if(MediasLogic.getInstance().getMediaType() == Configs.MEDIA_MOVIE){
                     intent.putExtra(Configs.PREVIEW_TYPE, Configs.PREVIEW_TYPE_VIDEO);
                 } else if(MediasLogic.getInstance().getMediaType() == Configs.MEDIA_PICTURE){
                     intent.putExtra(Configs.PREVIEW_TYPE, Configs.PREVIEW_TYPE_PICTURE);
                 }
-                startActivityForResult(intent, Configs.REQUEST_VIDEO_PICK);
+                startActivityForResult(intent, Configs.REQUEST_MULTI_PICK);
             }
         });
+    }
+
+    private void onMultiChoose() {
+        if (MediasLogic.getInstance().getChooseCount() > 0) {
+            int vSize = MediasLogic.getInstance().getChooseVideos().size();
+            int pSize = MediasLogic.getInstance().getChoosePictures().size();
+            Intent intent = new Intent();
+            intent.putExtra(Configs.MEDIA_TYPE, Configs.MEDIA_MULTI);
+            ArrayList<Uri> pictures = new ArrayList<Uri>();
+            ArrayList<Uri> videos = new ArrayList<Uri>();
+            for (int i = 0; i < pSize; i++) {
+                try {
+                    pictures.add(Uri.fromFile(new File(MediasLogic.getInstance().getChoosePictures().get(i).path)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            for (int i = 0; i < vSize; i++) {
+                try {
+                    videos.add(Uri.fromFile(new File(MediasLogic.getInstance().getChooseVideos().get(i).path)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            intent.putParcelableArrayListExtra(Configs.OUT_PUT_VIDEOS, videos);
+            intent.putParcelableArrayListExtra(Configs.OUT_PUT_IMAGES, pictures);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     private void initAlbumData() {
@@ -309,6 +314,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         MediasLogic.getInstance().unRegisterListener(this);
         MediasLogic.getInstance().clearData();
         Configs.reset();
+        MediaController.getInstance().cleanup();
         super.onDestroy();
     }
 
@@ -335,6 +341,8 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
                 data.putExtra("type", Configs.MEDIA_MOVIE);
                 setResult(RESULT_OK, data);
                 finish();
+            } else if(requestCode == Configs.REQUEST_MULTI_PICK){
+                onMultiChoose();
             }
         }
     }

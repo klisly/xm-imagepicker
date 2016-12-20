@@ -23,6 +23,7 @@ public class Configs {
     public static final String OUT_PUT_IMAGES = "OUT_PUT_IMAGES";
     public static final String OUT_PUT_VIDEOS = "OUT_PUT_VIDEOS";
     public static final int REQUEST_VIDEO_PICK = 60010;
+    public static final int REQUEST_MULTI_PICK = 60011;
 
     public static int NOTIFY_TYPE_MEDIA = 1; // 媒体加载变化
     public static int NOTIFY_TYPE_DIRECTORY = 21; // 目录选择变化

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import cn.iterlog.xmimagepicker.Utils.VideoRequestHandler;
 
 public class Gallery {
-
+    public static int lastClassGuid = 1;
     public volatile static Application applicationContext;
     public volatile static Handler applicationHandler;
     public volatile static Picasso picasso;
@@ -26,6 +26,7 @@ public class Gallery {
                     .addRequestHandler(requestHandler)
                     .build();
             executor = new ThreadPoolExecutor(5, 15, 30, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
+            CrashHandler.getInstance().init(applicationContext);
         }
     }
 }

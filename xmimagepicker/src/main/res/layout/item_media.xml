@@ -6,7 +6,7 @@
     android:clickable="true"
     >
 
-    <ImageView
+    <cn.iterlog.xmimagepicker.widget.BackupImageView
         android:id="@+id/iv_portrait"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -18,7 +18,7 @@
         app:layout_heightPercent="100%w"
         app:layout_widthPercent="100%w" />
 
-    <cn.iterlog.xmimagepicker.RippleChoiceView
+    <cn.iterlog.xmimagepicker.widget.RippleChoiceView
         android:id="@+id/rcv_choice"
         android:layout_width="0dp"
         android:layout_height="0dp"

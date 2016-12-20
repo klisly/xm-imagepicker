@@ -1,4 +1,4 @@
-package cn.iterlog.xmimagepicker;
+package cn.iterlog.xmimagepicker.widget;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -13,6 +13,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+
+import cn.iterlog.xmimagepicker.R;
 
 public class RippleChoiceView extends View {
     // 点击控件的点

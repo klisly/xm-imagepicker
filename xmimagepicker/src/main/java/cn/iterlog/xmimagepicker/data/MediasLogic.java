@@ -24,7 +24,15 @@ public class MediasLogic {
     private ArrayList<MediaController.PhotoEntry> choosePictures = new ArrayList<>();
     private ArrayList<MediaController.PhotoEntry> chooseVideos = new ArrayList<>();
     private HashMap<Object, MediaListener> listeners = new HashMap<>();
+
     public static MediasLogic getInstance() {
+        if (ourInstance == null) {
+            synchronized (MediasLogic.class) {
+                if (ourInstance == null) {
+                    ourInstance = new MediasLogic();
+                }
+            }
+        }
         return ourInstance;
     }
 
@@ -76,10 +84,11 @@ public class MediasLogic {
         this.loading = loading;
     }
 
-    public void registerListener(Object obj, MediaListener listener){
+    public void registerListener(Object obj, MediaListener listener) {
         listeners.put(obj, listener);
     }
-    public void unRegisterListener(Object obj){
+
+    public void unRegisterListener(Object obj) {
         listeners.remove(obj);
     }
 
@@ -93,7 +102,7 @@ public class MediasLogic {
     }
 
     public boolean isChooseAlbum(boolean isVideo, int position) {
-        if(isVideo){
+        if (isVideo) {
             return position == videoAlbumIndex;
         } else {
             return position == pictueAlbumIndex;
@@ -101,23 +110,23 @@ public class MediasLogic {
     }
 
     public List<MediaController.AlbumEntry> getChooseAlbum() {
-        if(mediaType == Configs.MEDIA_PICTURE){
+        if (mediaType == Configs.MEDIA_PICTURE) {
             return pictureAlbums;
-        } else if(mediaType == Configs.MEDIA_MOVIE){
+        } else if (mediaType == Configs.MEDIA_MOVIE) {
             return videoAlbums;
         }
         return Collections.EMPTY_LIST;
     }
 
     public String getChooseAlbumName() {
-        if(mediaType == Configs.MEDIA_PICTURE){
-            if(pictureAlbums.size() > pictueAlbumIndex){
+        if (mediaType == Configs.MEDIA_PICTURE) {
+            if (pictureAlbums.size() > pictueAlbumIndex) {
                 return pictureAlbums.get(pictueAlbumIndex).bucketName;
             } else {
                 return "所有图片";
             }
-        } else if(mediaType == Configs.MEDIA_MOVIE){
-            if(videoAlbums.size() > videoAlbumIndex){
+        } else if (mediaType == Configs.MEDIA_MOVIE) {
+            if (videoAlbums.size() > videoAlbumIndex) {
                 return videoAlbums.get(videoAlbumIndex).bucketName;
             } else {
                 return "所有视频";
@@ -143,7 +152,7 @@ public class MediasLogic {
     }
 
     public void setChooIndex(boolean isVideo, int position) {
-        if(isVideo){
+        if (isVideo) {
             videoAlbumIndex = position;
             notify(Configs.MEDIA_MOVIE);
         } else {
@@ -157,57 +166,63 @@ public class MediasLogic {
         mediaType = Configs.MEDIA_PICTURE;
         pictueAlbumIndex = 0;
         videoAlbumIndex = 0;
+        pictureAlbums.clear();
+        videoAlbums.clear();
+        selectedPhotos.clear();
         choosePictures.clear();
         chooseVideos.clear();
+        listeners.clear();
+        MediasLogic.ourInstance = null;
+        System.gc();
     }
 
     public int getChoosePosition() {
-        if(mediaType == Configs.MEDIA_PICTURE){
+        if (mediaType == Configs.MEDIA_PICTURE) {
             return pictueAlbumIndex;
-        } else if(mediaType == Configs.MEDIA_MOVIE){
+        } else if (mediaType == Configs.MEDIA_MOVIE) {
             return videoAlbumIndex;
         }
         return 0;
     }
 
     public int getChooseCount() {
-       return MediasLogic.getInstance().getChoosePictures().size() + MediasLogic.getInstance().getChooseVideos().size();
+        return MediasLogic.getInstance().getChoosePictures().size() + MediasLogic.getInstance().getChooseVideos().size();
     }
 
     public interface MediaListener {
         void onMediaNotify(int type);
     }
 
-    private void notify(int type){
-        for(MediaListener listener:listeners.values()){
-           listener.onMediaNotify(type);
+    private void notify(int type) {
+        for (MediaListener listener : listeners.values()) {
+            listener.onMediaNotify(type);
         }
     }
 
-    public void updateMediaType(int mediaType){
+    public void updateMediaType(int mediaType) {
         this.mediaType = mediaType;
-        Log.i("MediasLogic", "updateMediaType mediaType:"+mediaType);
+        Log.i("MediasLogic", "updateMediaType mediaType:" + mediaType);
         notify(Configs.NOTIFY_TYPE_DIRECTORY);
     }
 
-    public boolean isChoosed(final MediaController.PhotoEntry entry){
+    public boolean isChoosed(final MediaController.PhotoEntry entry) {
         int length = choosePictures.size();
-        for(int i = 0; i < length; i++){
-            if(choosePictures.get(i).path != null && entry.path != null && choosePictures.get(i).path.equals(entry.path)){
+        for (int i = 0; i < length; i++) {
+            if (choosePictures.get(i).path != null && entry.path != null && choosePictures.get(i).path.equals(entry.path)) {
                 return true;
             }
         }
         length = chooseVideos.size();
-        for(int i = 0; i < length; i++){
-            if(chooseVideos.get(i).path != null && entry.path != null && chooseVideos.get(i).path.equals(entry.path)){
+        for (int i = 0; i < length; i++) {
+            if (chooseVideos.get(i).path != null && entry.path != null && chooseVideos.get(i).path.equals(entry.path)) {
                 return true;
             }
         }
         return false;
     }
 
-    public void chooseMedia(final MediaController.PhotoEntry entry){
-        if(!entry.isVideo){
+    public void chooseMedia(final MediaController.PhotoEntry entry) {
+        if (!entry.isVideo) {
             choosePictures.add(entry);
         } else {
             chooseVideos.add(entry);
@@ -215,11 +230,11 @@ public class MediasLogic {
         notify(Configs.NOTIFY_TYPE_STATUS);
     }
 
-    public void unChooseMedia(final MediaController.PhotoEntry entry){
+    public void unChooseMedia(final MediaController.PhotoEntry entry) {
         int length = choosePictures.size();
-        if(!entry.isVideo){
-            for(int i = 0; i < length; i++){
-                if(choosePictures.get(i).equals(entry)){
+        if (!entry.isVideo) {
+            for (int i = 0; i < length; i++) {
+                if (choosePictures.get(i).equals(entry)) {
                     choosePictures.remove(i);
                     notify(Configs.NOTIFY_TYPE_STATUS);
                     return;
@@ -227,8 +242,8 @@ public class MediasLogic {
             }
         } else {
             length = chooseVideos.size();
-            for(int i = 0; i < length; i++){
-                if(chooseVideos.get(i).equals(entry)){
+            for (int i = 0; i < length; i++) {
+                if (chooseVideos.get(i).equals(entry)) {
                     chooseVideos.remove(i);
                     notify(Configs.NOTIFY_TYPE_STATUS);
                     return;

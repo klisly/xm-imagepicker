@@ -1,7 +1,5 @@
 package cn.iterlog.xmimagepicker.adapter;
 
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +9,13 @@ import android.widget.ImageView;
 
 import java.util.List;
 
+import cn.iterlog.xmimagepicker.widget.BackupImageView;
 import cn.iterlog.xmimagepicker.Configs;
 import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.R;
-import cn.iterlog.xmimagepicker.RippleChoiceView;
+import cn.iterlog.xmimagepicker.widget.RippleChoiceView;
 import cn.iterlog.xmimagepicker.Utils.AndroidUtilities;
 import cn.iterlog.xmimagepicker.Utils.MediaController;
-import cn.iterlog.xmimagepicker.Utils.VideoRequestHandler;
 import cn.iterlog.xmimagepicker.data.MediasLogic;
 
 public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder> {
@@ -52,22 +50,26 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder>
     @Override
     public void onBindViewHolder(final MediaHolder holder, final int position) {
         MediaController.PhotoEntry photoEntry = mMedias.get(position);
+        if (photoEntry.thumbPath != null) {
+            holder.mPortraitView.setImage(photoEntry.thumbPath, null,
+                    Gallery.applicationContext.getResources().getDrawable(R.drawable.nophotos));
+        } else if (photoEntry.path != null) {
+            holder.mPortraitView.setOrientation(photoEntry.orientation, true);
+            if (photoEntry.isVideo) {
+                holder.mPortraitView.setImage(
+                        "vthumb://" + photoEntry.imageId + ":" + photoEntry.path, null,
+                        Gallery.applicationContext.getResources().getDrawable(R.drawable.nophotos));
+            } else {
+                holder.mPortraitView.setImage(
+                        "thumb://" + photoEntry.imageId + ":" + photoEntry.path, null,
+                        Gallery.applicationContext.getResources().getDrawable(R.drawable.nophotos));
+            }
+        } else {
+            holder.mPortraitView.setImageResource(R.drawable.nophotos);
+        }
         if (photoEntry.isVideo) {
-            Gallery.picasso.load(VideoRequestHandler.SCHEME_VIDEO + ":" + photoEntry.path)
-                    .resize(Configs.THUMB_SIZE, Configs.THUMB_SIZE)
-                    .centerCrop()
-                    .placeholder(R.drawable.nophotos)
-                    .error(R.drawable.nophotos).into(holder.mPortraitView);
             holder.mVideoTag.setVisibility(View.VISIBLE);
         } else {
-            Uri imageURI = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Integer.toString(photoEntry.imageId));
-            Gallery.picasso
-                    .load(imageURI)
-                    .resize(Configs.THUMB_SIZE, Configs.THUMB_SIZE)
-                    .centerCrop()
-                    .placeholder(R.drawable.nophotos)
-                    .error(R.drawable.nophotos)
-                    .into(holder.mPortraitView);
             holder.mVideoTag.setVisibility(View.GONE);
         }
         if (MediasLogic.getInstance().isChoosed(photoEntry)) {
@@ -168,7 +170,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder>
 
     public class MediaHolder extends RecyclerView.ViewHolder {
 
-        ImageView mPortraitView;
+        BackupImageView mPortraitView;
         ImageView mVideoTag;
         View itemView;
         RippleChoiceView mRcv;
@@ -176,7 +178,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder>
         public MediaHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-            mPortraitView = (ImageView) itemView.findViewById(R.id.iv_portrait);
+            mPortraitView = (BackupImageView) itemView.findViewById(R.id.iv_portrait);
             mVideoTag = (ImageView) itemView.findViewById(R.id.iv_video_tag);
             mRcv = (RippleChoiceView) itemView.findViewById(R.id.rcv_choice);
             if (Configs.isMultiChoose()) {

@@ -27,6 +27,7 @@ import java.util.HashMap;
 
 import cn.iterlog.xmimagepicker.Gallery;
 import cn.iterlog.xmimagepicker.R;
+import cn.iterlog.xmimagepicker.TL.Document;
 
 public class MediaController implements NotificationCenter.NotificationCenterDelegate {
     public static final int AUTODOWNLOAD_MASK_PHOTO = 1;
@@ -401,6 +402,10 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
 
     public void cleanup() {
         typingTimes.clear();
+        allPhotosAlbumEntry.photosByIds.clear();
+        allPhotosAlbumEntry.photos.clear();
+        allPhotosAlbumEntry = null;
+        MediaController.Instance = null;
     }
 
     public void processMediaObserver(Uri uri) {
@@ -652,6 +657,7 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
         public String thumbPath;
         public String imagePath;
         public CharSequence caption;
+        public Document document;
 
     }
 
