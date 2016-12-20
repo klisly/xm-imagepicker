@@ -1,15 +1,25 @@
 package cn.iterlog.xmimagepicker;
 
 import android.animation.Animator;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import cn.iterlog.xmimagepicker.Utils.AndroidUtilities;
@@ -18,7 +28,11 @@ import cn.iterlog.xmimagepicker.data.MediasLogic;
 import cn.iterlog.xmimagepicker.widget.PhotoViewer;
 import cn.iterlog.xmimagepicker.widget.RippleChoiceView;
 
-public class MediasPreviewActivity extends AppCompatActivity implements MediasLogic.MediaListener {
+import static cn.iterlog.xmimagepicker.R.id.sv;
+
+public class MediasPreviewActivity extends AppCompatActivity implements SurfaceHolder.Callback, MediaPlayer.OnVideoSizeChangedListener, MediasLogic.MediaListener {
+    private static String TAG = MediasPreviewActivity.class.getSimpleName();
+
     private static int displayType = Configs.PREVIEW_TYPE_PICTURE;
     private int curPos = 0;
     private Toolbar toolbar;
@@ -27,10 +41,18 @@ public class MediasPreviewActivity extends AppCompatActivity implements MediasLo
     private RippleChoiceView mRcvItemChoose;
     private FrameLayout mViewFrame;
     private List<MediaController.PhotoEntry> datas;
+
+    private ImageView playButton;
+    private SurfaceView surfaceView;
+    private MediaPlayer mediaPlayer;
+    private int svWidth;
+    private int svHeight;
+    private int vWidht;
+    private int vHeight;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pictures_pager);
+        setContentView(R.layout.activity_previews);
         displayType = getIntent().getIntExtra(Configs.PREVIEW_TYPE, Configs.PREVIEW_TYPE_PICTURE);
         curPos = getIntent().getIntExtra(Configs.PREVIEW_POS, 0);
         mTvChoose = (TextView) findViewById(R.id.choose);
@@ -52,12 +74,318 @@ public class MediasPreviewActivity extends AppCompatActivity implements MediasLo
         } else {
             mTvChoose.setTextColor(getResources().getColor(R.color.white_50));
         }
+
+        playButton = (ImageView) findViewById(R.id.iv_play);
+        surfaceView = (SurfaceView) findViewById(sv);
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    onPausePlay();
+                } else {
+                    playButton.setVisibility(View.INVISIBLE);
+                    onstartPlay();
+                }
+            }
+        });
+        if (displayType == Configs.PREVIEW_TYPE_VIDEO || displayType == Configs.PREVIEW_TYPE_VIDEO_ALL) {
+            playButton.setVisibility(View.VISIBLE);
+            surfaceView.setVisibility(View.VISIBLE);
+        } else {
+            playButton.setVisibility(View.GONE);
+            surfaceView.setVisibility(View.GONE);
+        }
+
+        surfaceView.getHolder().addCallback(this);
+        surfaceView.setBackgroundDrawable(getResources().getDrawable(R.drawable.video_texture));
+        surfaceView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    onPausePlay();
+                } else {
+                    playButton.setVisibility(View.GONE);
+                    onstartPlay();
+                }
+            }
+        });
+        initSvSize();
+
         initToolBar();
         initListener();
         updateChooseStatus();
         openPreview();
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        surfaceView.setBackgroundColor(getResources().getColor(R.color.black_p50));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        onStopPlay();
+    }
+
+    private void onCompletePlay() {
+        Log.i(TAG, "curl pos:" + mediaPlayer.getCurrentPosition() + " duration:" + mediaPlayer.getDuration());
+        if(mediaPlayer.getDuration() == 0){
+            AndroidUtilities.showToast(getString(R.string.play_error));
+            finish();
+            onStopPlay();
+            return;
+        }
+        surfaceView.setVisibility(View.INVISIBLE);
+
+        surfaceView.animate()
+                .alpha(0.0f)
+                .setDuration(300)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        surfaceView.setVisibility(View.INVISIBLE);
+                        surfaceView.setAlpha(1);
+                        surfaceView.setBackgroundColor(getResources().getColor(R.color.black_p50));
+                        mViewFrame.setVisibility(View.VISIBLE);
+                        mViewFrame.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mViewFrame.setVisibility(View.VISIBLE);
+                            }
+                        }, 300);
+//                        mViewFrame.setAlpha(0.1f);
+//                        mViewFrame.animate()
+//                                .alpha(1f)
+//                                .setDuration(300)
+//                                .setListener(new Animator.AnimatorListener() {
+//                                    @Override
+//                                    public void onAnimationStart(Animator animation) {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onAnimationEnd(Animator animation) {
+//                                        mViewFrame.setAlpha(1);
+//                                    }
+//
+//                                    @Override
+//                                    public void onAnimationCancel(Animator animation) {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onAnimationRepeat(Animator animation) {
+//
+//                                    }
+//                                })
+//                                .start();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .start();
+        playButton.setVisibility(View.VISIBLE);
+        playButton.setAlpha(0.2f);
+        playButton.animate()
+                .alpha(1f)
+                .setDuration(300)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .start();
+    }
+
+    private void onPausePlay() {
+        playButton.setVisibility(View.VISIBLE);
+        mediaPlayer.pause();
+    }
+
+
+    private void onstartPlay() {
+        surfaceView.setVisibility(View.VISIBLE);
+        mViewFrame.animate()
+                .alpha(0.9f)
+                .setDuration(200)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        surfaceView.setBackgroundDrawable(null);
+                        mViewFrame.setVisibility(View.INVISIBLE);
+                        mViewFrame.setAlpha(1.0f);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .start();
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+            playButton.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        try {
+
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setDataSource(this, Uri.fromFile(new File(datas.get(curPos).path)));
+            mediaPlayer.prepareAsync();
+            mediaPlayer.setDisplay(surfaceView.getHolder());
+            mediaPlayer.setOnVideoSizeChangedListener(this);
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    playButton.setVisibility(View.INVISIBLE);
+                    mediaPlayer.start();
+
+                }
+            });
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    Log.i(TAG, "position:" + mp.getCurrentPosition());
+                    onCompletePlay();
+                }
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            onStopPlay();
+            AndroidUtilities.showToast(getString(R.string.play_error));
+            finish();
+            return;
+        }
+
+    }
+
+    protected void onStopPlay() {
+        if (!(displayType == Configs.PREVIEW_TYPE_VIDEO || displayType == Configs.PREVIEW_TYPE_VIDEO_ALL)) {
+            return;
+        }
+        playButton.setVisibility(View.VISIBLE);
+        surfaceView.setVisibility(View.INVISIBLE);
+        mViewFrame.setVisibility(View.VISIBLE);
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.stop();
+                mediaPlayer.release();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+            mediaPlayer = null;
+        }
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        onStopPlay();
+    }
+
+    @Override
+    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+        if (vHeight != height || width != vWidht) {
+            vHeight = height;
+            vWidht = width;
+            Log.i(TAG, "has changed video size w:" + width + "video size h:" + height);
+            refreshSvSize();
+        }
+    }
+
+    private void initSvSize() {
+        surfaceView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                int tmpWidth = right - left;
+                int tmpHeight = bottom - top;
+                if (tmpHeight != svWidth || tmpHeight != svHeight) {
+                    svWidth = tmpWidth;
+                    svHeight = tmpHeight;
+                    Log.i(TAG, "surfaceView size changed sw:" + svWidth + "sh:" + svHeight);
+                    refreshSvSize();
+                }
+            }
+        });
+    }
+
+    private void refreshSvSize() {
+        if (svWidth == 0 || svHeight == 0 || vWidht == 0 || vHeight == 0) {
+            return;
+        }
+
+        float rate = vWidht * 1.0f / vHeight;
+        Log.i(TAG, "video w/h rate:" + rate);
+        if (svHeight * rate > svWidth) {
+            svHeight = (int) (svWidth / rate);
+        } else {
+            svWidth = (int) (svHeight * rate);
+        }
+        ViewGroup.LayoutParams params = surfaceView.getLayoutParams();
+        params.width = svWidth;
+        params.height = svHeight;
+        surfaceView.setLayoutParams(params);
+        params = mViewFrame.getLayoutParams();
+        params.width = svWidth;
+        params.height = svHeight;
+        mViewFrame.setLayoutParams(params);
+    }
+
 
     public void openPreview() {
         PhotoViewer.getInstance().setParentActivity(this, mViewFrame);
@@ -176,8 +504,8 @@ public class MediasPreviewActivity extends AppCompatActivity implements MediasLo
         if (count > 0) {
             if (mRcvNumber.getVisibility() != View.VISIBLE) {
                 mRcvNumber.setVisibility(View.VISIBLE);
-                mRcvNumber.setScaleX(0f);
-                mRcvNumber.setScaleX(0f);
+                mRcvNumber.setScaleX(0.5f);
+                mRcvNumber.setScaleX(0.5f);
                 mRcvNumber.animate()
                         .scaleX(1f)
                         .scaleY(1f)
@@ -326,5 +654,9 @@ public class MediasPreviewActivity extends AppCompatActivity implements MediasLo
         MediasLogic.getInstance().unRegisterListener(this);
         PhotoViewer.getInstance().destroyPhotoViewer();
     }
-    
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

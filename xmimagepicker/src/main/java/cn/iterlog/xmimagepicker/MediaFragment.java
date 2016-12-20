@@ -78,10 +78,11 @@ public class MediaFragment extends Fragment implements MediasLogic.MediaListener
 
                     if (Configs.isMultiChoose()) {
                         if (photoEntry.isVideo) {
-                            Intent intent = new Intent(getActivity(), MediasPreviewActivity.class);
-                            intent.putExtra(Configs.PREVIEW_POS, position);
-                            intent.putExtra(Configs.PREVIEW_TYPE, Configs.PREVIEW_TYPE_VIDEO_ALL);
-                            getActivity().startActivityForResult(intent, Configs.REQUEST_MULTI_PICK);
+                            Intent intent = new Intent(getActivity(), VideoPlyerActivity.class);
+                            intent.putExtra(VideoPlyerActivity.PARAM_TYPE, VideoPlyerActivity.TYPE_PREVIEW);
+                            intent.putExtra(VideoPlyerActivity.PARAM_SRC, Uri.fromFile(new File(photoEntry.path)));
+                            getActivity().startActivityForResult(intent, Configs.REQUEST_VIDEO_PICK);
+
                         } else {
                             Intent intent = new Intent(getActivity(), MediasPreviewActivity.class);
                             intent.putExtra(Configs.PREVIEW_POS, position);
