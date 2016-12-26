@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -41,13 +42,16 @@ public class MainActivity extends BaseActivity {
             if(type == Configs.MEDIA_PICTURE){
                 Uri res = data.getParcelableExtra(Configs.OUT_PUT);
                 mainPresenter.setImage(false, res);
+                Toast.makeText(this, "result: picture:"+res, Toast.LENGTH_LONG).show();
             } else if(type == Configs.MEDIA_MOVIE){
                 Uri res = data.getParcelableExtra(Configs.OUT_PUT);
                 mainPresenter.setImage(true, res);
+                Toast.makeText(this, "result: movie:"+res, Toast.LENGTH_LONG).show();
             } else if(type == Configs.MEDIA_MULTI) {
                 List<Uri> videos = data.getParcelableArrayListExtra(Configs.OUT_PUT_VIDEOS);
                 List<Uri> images = data.getParcelableArrayListExtra(Configs.OUT_PUT_IMAGES);
                 Log.i(TAG, "videos:"+videos+" images:"+images);
+                Toast.makeText(this, "result: images:"+images.toString()+" videos:"+videos.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }
