@@ -1370,6 +1370,14 @@ public class ImageLoader {
         memCache.evictAll();
     }
 
+    public void clean(){
+        clearMemory();
+        cacheOutQueue.setPriority(Thread.MIN_PRIORITY);
+        cacheThumbOutQueue.setPriority(Thread.MIN_PRIORITY);
+        thumbGeneratingQueue.setPriority(Thread.MIN_PRIORITY);
+        imageLoadQueue.setPriority(Thread.MIN_PRIORITY);
+    }
+
     private void removeFromWaitingForThumb(Integer TAG) {
         String location = waitingForQualityThumbByTag.get(TAG);
         if (location != null) {

@@ -12,7 +12,6 @@ public class Gallery {
         if (applicationContext == null) {
             applicationContext = application;
             applicationHandler = new Handler(application.getMainLooper());
-            CrashHandler.getInstance().init(applicationContext);
         }
     }
 

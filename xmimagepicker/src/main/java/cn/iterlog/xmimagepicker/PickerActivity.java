@@ -29,6 +29,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import cn.iterlog.xmimagepicker.Utils.AndroidUtilities;
+import cn.iterlog.xmimagepicker.Utils.ImageLoader;
 import cn.iterlog.xmimagepicker.Utils.MediaController;
 import cn.iterlog.xmimagepicker.Utils.NotificationCenter;
 import cn.iterlog.xmimagepicker.adapter.AlbumAdapter;
@@ -188,6 +189,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             public void onPageSelected(int position) {
                 MediasLogic.getInstance().updateMediaType(Configs.getInstance().getMedias().get(position));
                 hideDir();
+                showPreview();
             }
 
             @Override
@@ -316,7 +318,8 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         MediasLogic.getInstance().clearData();
         Configs.getInstance().reset();
         MediaController.getInstance().cleanup();
-        Gallery.clean();
+        ImageLoader.getInstance().clean();
+//        Gallery.clean();
         super.onDestroy();
     }
 
@@ -371,13 +374,10 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
             String name = MediasLogic.getInstance().getChooseAlbumName();
             mTvChooseName.setText(name);
         } else if (type == Configs.NOTIFY_TYPE_STATUS) {
+            showPreview();
             int count = MediasLogic.getInstance().getChooseCount();
             if (count > 0) {
                 if (mRcvNumber.getVisibility() != View.VISIBLE) {
-                    // TODO 暂时只支持图片的预览
-                    if (MediasLogic.getInstance().getMediaType() == Configs.MEDIA_PICTURE) {
-                        mTvPreview.setVisibility(View.VISIBLE);
-                    }
                     mRcvNumber.setVisibility(View.VISIBLE);
                     mRcvNumber.setScaleX(0f);
                     mRcvNumber.setScaleX(0f);
@@ -443,6 +443,15 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
                         .start();
                 mTvChoose.setTextColor(getResources().getColor(R.color.white_50));
             }
+        }
+    }
+
+    private void showPreview() {
+        // TODO 暂时只支持图片的预览
+        if (MediasLogic.getInstance().getMediaType() == Configs.MEDIA_PICTURE && MediasLogic.getInstance().getChoosePictures().size() > 0) {
+            mTvPreview.setVisibility(View.VISIBLE);
+        } else {
+            mTvPreview.setVisibility(View.INVISIBLE);
         }
     }
 
