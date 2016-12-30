@@ -3,7 +3,8 @@ package cn.iterlog.xmimagepicker;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.iterlog.swipbackhelper.SwipeBackHelper;
+import com.jude.swipbackhelper.SwipeBackHelper;
+
 
 public class BaseActivity extends AppCompatActivity {
     protected static String TAG ;

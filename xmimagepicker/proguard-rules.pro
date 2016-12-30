@@ -19,7 +19,27 @@
 -keepclasseswithmembers public class cn.iterlog.xmimagepicker.Configs{
     *;
 }
+-keepclasseswithmembers public class cn.iterlog.xmimagepicker.Configs{
+    *;
+}
 -keepclasseswithmembers public class cn.iterlog.xmimagepicker.PickerActivity{
+    *;
+}
+-keepclasseswithmembers public class cn.iterlog.xmimagepicker.MediasPreviewActivity{
+    *;
+}
+-keepclasseswithmembers public class cn.iterlog.xmimagepicker.videoplay.VideoPlyerActivity{
+    *;
+}
+-keepclasseswithmembers public class cn.iterlog.xmimagepicker.corp.CropImageActivity{
+    *;
+}
+
+-keepclasseswithmembers public class cn.iterlog.xmimagepicker.widget.ClippingImageView{
+    *;
+}
+
+-keepclasseswithmembers public class cn.iterlog.xmimagepicker.widget.PhotoViewer{
     *;
 }
 -keepclasseswithmembers public class cn.iterlog.xmimagepicker.Gallery{

@@ -1,1 +1,1 @@
-include ':app', ':xmimagepicker', ':swipebackhelper'
+include ':app', ':xmimagepicker'
