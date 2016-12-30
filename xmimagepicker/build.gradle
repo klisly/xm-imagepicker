@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-group='wizardholy'
+group='com.github.klisly'
 
 android {
     compileSdkVersion 25
