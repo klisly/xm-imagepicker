@@ -15,4 +15,13 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--dontwarn com.squareup.okhttp.**
+
+-keepclasseswithmembers public class cn.iterlog.xmimagepicker.Configs{
+    *;
+}
+-keepclasseswithmembers public class cn.iterlog.xmimagepicker.PickerActivity{
+    *;
+}
+-keepclasseswithmembers public class cn.iterlog.xmimagepicker.Gallery{
+    *;
+}

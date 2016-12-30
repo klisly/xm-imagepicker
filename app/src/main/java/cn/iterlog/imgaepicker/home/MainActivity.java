@@ -4,17 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.util.List;
 
 import cn.iterlog.imgaepicker.R;
-import cn.iterlog.imgaepicker.util.ActivityUtils;
-import cn.iterlog.xmimagepicker.BaseActivity;
 import cn.iterlog.xmimagepicker.Configs;
 
-public class MainActivity extends BaseActivity {
+import static com.google.common.base.Preconditions.checkNotNull;
+
+public class MainActivity extends AppCompatActivity {
     private MainPresenter mainPresenter;
 //    private List<String> photos;
 //    private BaseAdapter adapter;
@@ -28,7 +33,7 @@ public class MainActivity extends BaseActivity {
                 .findFragmentById(R.id.contentFrame);
         if(fragment == null){
             fragment = MainFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+            addFragmentToActivity(getSupportFragmentManager(),
                     fragment, R.id.contentFrame);
         }
         mainPresenter = new MainPresenter(fragment);
@@ -50,9 +55,20 @@ public class MainActivity extends BaseActivity {
             } else if(type == Configs.MEDIA_MULTI) {
                 List<Uri> videos = data.getParcelableArrayListExtra(Configs.OUT_PUT_VIDEOS);
                 List<Uri> images = data.getParcelableArrayListExtra(Configs.OUT_PUT_IMAGES);
-                Log.i(TAG, "videos:"+videos+" images:"+images);
+                Log.i("MainActivity", "videos:"+videos+" images:"+images);
                 Toast.makeText(this, "result: images:"+images.toString()+" videos:"+videos.toString(), Toast.LENGTH_LONG).show();
             }
         }
     }
+
+
+    public static void addFragmentToActivity (@NonNull FragmentManager fragmentManager,
+                                              @NonNull Fragment fragment, int frameId) {
+        checkNotNull(fragmentManager);
+        checkNotNull(fragment);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(frameId, fragment);
+        transaction.commit();
+    }
+
 }

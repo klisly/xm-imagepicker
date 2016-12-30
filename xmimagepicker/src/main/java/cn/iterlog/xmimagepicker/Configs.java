@@ -116,7 +116,7 @@ public class Configs implements Serializable {
         return types;
     }
 
-    public void addMedia(int type) {
+    public Configs addMedia(int type) {
 
         if (type == MEDIA_PICTURE) {
             types.add(MEDIA_PICTURE);
@@ -132,22 +132,25 @@ public class Configs implements Serializable {
             types.add(MEDIA_MUSIC);
             names.add(context.getString(R.string.music));
         }
+        return this;
     }
 
     public boolean isPreviewVideo() {
         return previewVideo;
     }
 
-    public void setPreviewVideo(boolean previewVideo) {
+    public Configs setPreviewVideo(boolean previewVideo) {
         this.previewVideo = previewVideo;
+        return this;
     }
 
     public int getVideoSize() {
         return videoSize;
     }
 
-    public void setVideoSize(int videoSize) {
+    public Configs setVideoSize(int videoSize) {
         this.videoSize = videoSize;
+        return this;
     }
 
     public int getImageSize() {
