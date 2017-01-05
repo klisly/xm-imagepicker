@@ -93,7 +93,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaHolder>
                 public void onCheckedChanged(RippleChoiceView view, boolean isChecked) {
 
                     if (isChecked) {
-                        if (Configs.getInstance().isSimpleType()) {
+                        if (Configs.getInstance().isSingleType()) {
                             if ((mMedias.get(position).isVideo && MediasLogic.getInstance().getChoosePictures().size() > 0)
                                     || (!mMedias.get(position).isVideo && MediasLogic.getInstance().getChooseVideos().size() > 0)) {
                                 StringBuilder builder = new StringBuilder();

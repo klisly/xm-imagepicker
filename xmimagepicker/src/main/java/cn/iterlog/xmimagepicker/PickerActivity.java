@@ -58,6 +58,7 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picker);
         Gallery.init(getApplication());
+        initConfig(getIntent());
         initToolBar();
         getWindowManager().getDefaultDisplay().getSize(point);
         mTvChooseName = (TextView) findViewById(R.id.tv_dir);
@@ -79,6 +80,27 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         MediasLogic.getInstance().registerListener(this, this);
 
 
+    }
+
+    private void initConfig(Intent intent) {
+        Configs.getInstance().reset();
+        ArrayList<Integer> list = intent.getIntegerArrayListExtra(Configs.PARAM_MEDIAS);
+        if(list != null){
+            for(Integer m : list){
+                Configs.getInstance().addMedia(m);
+            }
+        }
+        Configs.getInstance().setImageSize(intent.getIntExtra(Configs.PARAM_THUMB_SIZE, 250));
+        Configs.getInstance().setEditImage(intent.getBooleanExtra(Configs.PARAM_EDIT_IMG, false));
+        Configs.getInstance().setPreviewVideo(intent.getBooleanExtra(Configs.PARAM_PREVIEW_VIDEO, false));
+        Configs.getInstance().setImageSize(intent.getIntExtra(Configs.PARAM_IMAGE_SZIE, 1));
+        Configs.getInstance().setVideoSize(intent.getIntExtra(Configs.PARAM_VIDEO_SIZE, 1));
+        Configs.getInstance().setSingleType(intent.getBooleanExtra(Configs.PARAM_SIGNLE_TYPE, false));
+        if(Configs.getInstance().getImageSize() > 1 || Configs.getInstance().getVideoSize() > 1){
+            Configs.getInstance().setMultiChoose(true);
+        } else {
+            Configs.getInstance().setMultiChoose(false);
+        }
     }
 
     private void initListener() {
@@ -361,8 +383,32 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
         }
     }
 
-    public static void openActivity(Activity activity, int requestCode) {
+    /**
+     * 启动图片选择器主方法
+     * @param activity 启动的Activity
+     * @param requestCode
+     * @param medias 选择的媒体列表 参见Configs的配置
+     * @param thumbSize // 缩略图的打消
+     * @param isEditImg // 是否编辑图片
+     * @param isPreviewVideo // 是否预览视频
+     * @param imgSize // 选择的图片张数
+     * @param videoSize // 选择的视频个数
+     * @param singleType // 是否只选择其中一种媒体
+     */
+    public static void openPicker(Activity activity, int requestCode, ArrayList<Integer> medias,
+                                  int thumbSize, boolean isEditImg, boolean isPreviewVideo,
+                                  int imgSize, int videoSize,
+                                  boolean singleType) {
         Intent intent = new Intent(activity, PickerActivity.class);
+
+        intent.putIntegerArrayListExtra(Configs.PARAM_MEDIAS, medias);
+        intent.putExtra(Configs.PARAM_THUMB_SIZE, thumbSize);
+        intent.putExtra(Configs.PARAM_EDIT_IMG, isEditImg);
+        intent.putExtra(Configs.PARAM_PREVIEW_VIDEO, isPreviewVideo);
+        intent.putExtra(Configs.PARAM_IMAGE_SZIE, imgSize);
+        intent.putExtra(Configs.PARAM_VIDEO_SIZE, videoSize);
+        intent.putExtra(Configs.PARAM_SIGNLE_TYPE, singleType);
+
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -458,5 +504,29 @@ public class PickerActivity extends BaseActivity implements NotificationCenter.N
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    public static void chooseSingleMovie(Activity activity, int requestCode, boolean isPreview) {
+        ArrayList<Integer> medias = new ArrayList<>();
+        medias.add(Configs.MEDIA_MOVIE);
+        openPicker(activity, requestCode, medias, 256, false, isPreview, 1, 1, false);
+    }
+
+    public static void chooseMultiMovie(Activity activity, int requestCode, int size) {
+        ArrayList<Integer> medias = new ArrayList<>();
+        medias.add(Configs.MEDIA_MOVIE);
+        openPicker(activity, requestCode, medias, 256, false, true, 1, size, false);
+    }
+
+    public static void chooseSinglePicture(Activity activity, int requestCode, boolean isEdit) {
+        ArrayList<Integer> medias = new ArrayList<>();
+        medias.add(Configs.MEDIA_PICTURE);
+        openPicker(activity, requestCode, medias, 256, isEdit, false, 1, 1, false);
+    }
+
+    public static void chooseMultiPicture(Activity activity, int requestCode, int size) {
+        ArrayList<Integer> medias = new ArrayList<>();
+        medias.add(Configs.MEDIA_PICTURE);
+        openPicker(activity, requestCode, medias, 256, false, false, size, 1, false);
     }
 }

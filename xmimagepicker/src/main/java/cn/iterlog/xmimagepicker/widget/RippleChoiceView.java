@@ -48,6 +48,7 @@ public class RippleChoiceView extends View {
     private PointF hookEnd;
 
     private boolean mChecked = true;
+    private boolean mCheckeable = true;
     private boolean isHookShow = false;
     private int mNumber = 0;
 
@@ -90,6 +91,8 @@ public class RippleChoiceView extends View {
         mBorderWidth = a.getDimension(R.styleable.RippleChoiceView_rippleBorderWidth, dp2px(2));
         mDuration = a.getInt(R.styleable.RippleChoiceView_rippleduration, mDuration);
         mChecked = a.getBoolean(R.styleable.RippleChoiceView_checked, mChecked);
+        mCheckeable = a.getBoolean(R.styleable.RippleChoiceView_checkable, mCheckeable);
+
         mNumber = a.getInt(R.styleable.RippleChoiceView_number, mNumber);
         a.recycle();
         mHookDuration = (int) (mDuration * 0.3);
@@ -191,7 +194,7 @@ public class RippleChoiceView extends View {
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                if (!isEnabled()) {
+                if (!isEnabled() && !mCheckeable) {
                     return false;
                 }
                 break;
@@ -200,6 +203,9 @@ public class RippleChoiceView extends View {
             case MotionEvent.ACTION_UP:
                 if (mIsAnimating) {
                     return true;
+                }
+                if(!mCheckeable){
+                   return false;
                 }
                 if (x + getLeft() < getRight() && y + getTop() < getBottom()) {
                     mChecked = !mChecked;

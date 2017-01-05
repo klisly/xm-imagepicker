@@ -62,6 +62,7 @@
             app:borderColor="@color/white"
             app:borderWidth="0.5dp"
             app:checked="true"
+            app:checkable="false"
             app:checkedColor="@color/white"
             app:crossColor="@color/accent"
             app:crossType="number"

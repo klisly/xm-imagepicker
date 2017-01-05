@@ -10,5 +10,6 @@
         <attr name="crossType" format="string" />
         <attr name="number" format="integer" />
         <attr name="textSize" format="dimension" />
+        <attr name="checkable" format="boolean" />
     </declare-styleable>
 </resources>

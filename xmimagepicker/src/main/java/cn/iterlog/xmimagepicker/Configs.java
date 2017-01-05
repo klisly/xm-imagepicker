@@ -1,7 +1,5 @@
 package cn.iterlog.xmimagepicker;
 
-import android.content.Context;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +27,13 @@ public class Configs implements Serializable {
     public static final String OUT_PUT_VIDEOS = "OUT_PUT_VIDEOS";
     public static final int REQUEST_VIDEO_PICK = 60010;
     public static final int REQUEST_MULTI_PICK = 60011;
+    public static final String PARAM_MEDIAS = "PARAM_MEDIAS";
+    public static final String PARAM_THUMB_SIZE = "PARAM_THUMB_SIZE";
+    public static final String PARAM_SIGNLE_TYPE = "PARAM_SIGNLE_TYPE";
+    public static final String PARAM_VIDEO_SIZE = "PARAM_VIDEO_SIZE";
+    public static final String PARAM_IMAGE_SZIE = "PARAM_IMAGE_SZIE";
+    public static final String PARAM_PREVIEW_VIDEO = "PARAM_PREVIEW_VIDEO";
+    public static final String PARAM_EDIT_IMG = "PARAM_EDIT_IMG";
 
     public static int NOTIFY_TYPE_MEDIA = 1; // 媒体加载变化
     public static int NOTIFY_TYPE_DIRECTORY = 21; // 目录选择变化
@@ -48,21 +53,14 @@ public class Configs implements Serializable {
     private boolean multiChoose = false;
     private int imageSize = 6;
     private int videoSize = 1;
-    private boolean simpleType = false;
+    private boolean singleType = false; // 是否是只选多重类型中的一种，如只能选图片或者视频
     private static Configs instance;
-    private Context context;
+
     public static Configs getInstance() {
-        if(Gallery.applicationContext == null){
-            throw new NullPointerException("Gallery.applicationContext not init");
-        }
-        return getInstance(Gallery.applicationContext);
-    }
-    public static Configs getInstance(Context context) {
         if (instance == null) {
             synchronized (MediasLogic.class) {
                 if (instance == null) {
                     instance = new Configs();
-                    instance.setContext(context);
                 }
             }
         }
@@ -73,13 +71,6 @@ public class Configs implements Serializable {
 
     }
 
-    public Context getContext() {
-        return context;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
-    }
 
     public boolean isEditImage() {
         return editImage;
@@ -120,17 +111,17 @@ public class Configs implements Serializable {
 
         if (type == MEDIA_PICTURE) {
             types.add(MEDIA_PICTURE);
-            names.add(context.getString(R.string.picture));
+            names.add("图片");
 
         } else if (type == MEDIA_MOVIE) {
             types.add(MEDIA_MOVIE);
-            names.add(context.getString(R.string.video));
+            names.add("视频");
         } else if (type == MEDIA_DOCUMENT) {
             types.add(MEDIA_DOCUMENT);
-            names.add(context.getString(R.string.document));
+            names.add("文档");
         } else if (type == MEDIA_MUSIC) {
             types.add(MEDIA_MUSIC);
-            names.add(context.getString(R.string.music));
+            names.add("音乐");
         }
         return this;
     }
@@ -161,13 +152,14 @@ public class Configs implements Serializable {
         this.imageSize = imageSize;
     }
 
-    public boolean isSimpleType() {
-        return simpleType;
+    public boolean isSingleType() {
+        return singleType;
     }
 
-    public void setSimpleType(boolean simpleType) {
-        this.simpleType = simpleType;
+    public void setSingleType(boolean singleType) {
+        this.singleType = singleType;
     }
+
 
     public void reset() {
         editImage = true;
@@ -177,6 +169,6 @@ public class Configs implements Serializable {
         multiChoose = false;
         videoSize = 1;
         imageSize = 1;
-        simpleType = false;
+        singleType = false;
     }
 }

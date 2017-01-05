@@ -34,7 +34,6 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_gravity="right"
-            android:clickable="false"
             android:gravity="center"
             android:visibility="invisible"
             app:borderWidth="0.5dp"
@@ -44,6 +43,7 @@
             app:crossColor="@color/accent"
             app:checked="true"
             app:textSize="12sp"
+            app:checkable="false"
             app:crossType="number" />
     </android.support.v7.widget.Toolbar>
 

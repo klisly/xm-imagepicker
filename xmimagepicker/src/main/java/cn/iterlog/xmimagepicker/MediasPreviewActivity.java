@@ -573,7 +573,7 @@ public class MediasPreviewActivity extends AppCompatActivity implements SurfaceH
             public void onCheckedChanged(RippleChoiceView view, boolean isChecked) {
 
                 if (isChecked) {
-                    if (Configs.getInstance().isSimpleType()) {
+                    if (Configs.getInstance().isSingleType()) {
                         if ((datas.get(curPos).isVideo && MediasLogic.getInstance().getChoosePictures().size() > 0)
                                 || datas.get(curPos).isVideo && MediasLogic.getInstance().getChooseVideos().size() > 0) {
                             StringBuilder builder = new StringBuilder();

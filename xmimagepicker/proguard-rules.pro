@@ -19,9 +19,6 @@
 -keepclasseswithmembers public class cn.iterlog.xmimagepicker.Configs{
     *;
 }
--keepclasseswithmembers public class cn.iterlog.xmimagepicker.Configs{
-    *;
-}
 -keepclasseswithmembers public class cn.iterlog.xmimagepicker.PickerActivity{
     *;
 }
